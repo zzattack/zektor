@@ -1,0 +1,10 @@
+bin
+obj
+*.suo
+*.user
+_ReSharper.*
+licenses.licx
+packages
+.nuget
+~$*.docx
+.vs

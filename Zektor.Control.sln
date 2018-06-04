@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zektor", "Zektor\Zektor.csproj", "{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zektor.Control", "Zektor.Control\Zektor.Control.csproj", "{B03040F6-3A25-43A2-841A-82F0B5D04573}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPAA05.Shared", "..\..\UMTS\SPAA05 Library\SPAA05.Shared\SPAA05.Shared.csproj", "{DFC72919-A118-4D54-8792-541C20ED60CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPAA05.Shared.UI", "..\..\UMTS\SPAA05 Library\SPAA05.Shared.UI\SPAA05.Shared.UI.csproj", "{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugWithLibs|Any CPU = DebugWithLibs|Any CPU
+		Release|Any CPU = Release|Any CPU
+		ReleaseWithLibs|Any CPU = ReleaseWithLibs|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}.DebugWithLibs|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}.DebugWithLibs|Any CPU.Build.0 = Debug|Any CPU
+		{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}.ReleaseWithLibs|Any CPU.ActiveCfg = Release|Any CPU
+		{6E75BAC2-ECC3-417C-B7C2-B9D59373B652}.ReleaseWithLibs|Any CPU.Build.0 = Release|Any CPU
+		{B03040F6-3A25-43A2-841A-82F0B5D04573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B03040F6-3A25-43A2-841A-82F0B5D04573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B03040F6-3A25-43A2-841A-82F0B5D04573}.DebugWithLibs|Any CPU.ActiveCfg = Debug|Any CPU
+		{B03040F6-3A25-43A2-841A-82F0B5D04573}.DebugWithLibs|Any CPU.Build.0 = Debug|Any CPU
+		{B03040F6-3A25-43A2-841A-82F0B5D04573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B03040F6-3A25-43A2-841A-82F0B5D04573}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B03040F6-3A25-43A2-841A-82F0B5D04573}.ReleaseWithLibs|Any CPU.ActiveCfg = Release|Any CPU
+		{B03040F6-3A25-43A2-841A-82F0B5D04573}.ReleaseWithLibs|Any CPU.Build.0 = Release|Any CPU
+		{DFC72919-A118-4D54-8792-541C20ED60CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFC72919-A118-4D54-8792-541C20ED60CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFC72919-A118-4D54-8792-541C20ED60CD}.DebugWithLibs|Any CPU.ActiveCfg = DebugWithLibs|Any CPU
+		{DFC72919-A118-4D54-8792-541C20ED60CD}.DebugWithLibs|Any CPU.Build.0 = DebugWithLibs|Any CPU
+		{DFC72919-A118-4D54-8792-541C20ED60CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFC72919-A118-4D54-8792-541C20ED60CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFC72919-A118-4D54-8792-541C20ED60CD}.ReleaseWithLibs|Any CPU.ActiveCfg = ReleaseWithLibs|Any CPU
+		{DFC72919-A118-4D54-8792-541C20ED60CD}.ReleaseWithLibs|Any CPU.Build.0 = ReleaseWithLibs|Any CPU
+		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.DebugWithLibs|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.DebugWithLibs|Any CPU.Build.0 = Debug|Any CPU
+		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.ReleaseWithLibs|Any CPU.ActiveCfg = Release|Any CPU
+		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.ReleaseWithLibs|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDFC0872-D862-4DA7-A761-CC9F091B9BE6}
+	EndGlobalSection
+EndGlobal
