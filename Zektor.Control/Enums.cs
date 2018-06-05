@@ -47,6 +47,13 @@ namespace Zektor.Control {
         InvalidState = 8,
     }
 
+    public enum KeyEnableState {
+        Disabled = '0',
+        Enabled = '1',
+        Toggle = '+',
+        None
+    }
+
     [Flags]
     public enum QueryFlags {
         PWR = 1, // Power State has changed
@@ -90,6 +97,19 @@ namespace Zektor.Control {
         _12V = 8192, // 0=Classic Analog/Digital mode, 1=Automatic conversion of Analog/Digital paths
         VMU = 16384, // video muting when a zone is muted
         AMU = 32768, // audio muting when a zone is muted
+    }
+
+    [Flags]
+    public enum TransmitEnableSettings {
+        PWR = 1, // 1=Send update when power state has changed
+        QSZ = 2, // 1=Send update when selection (Source / Zone Mapping) has changed
+        QMZ = 4, // 1=Send update when mute settings have changed.
+        QDZ = 8, // 1=Send update when switching delay settings have changed.
+        KEY = 16, // 1=Send update when one or more keys have been pressed.
+        IRR = 32, // 1=Send update when a new IR code has been received.
+        LMI = 64, // 1=Send update when light mode and / or intensities have changed.
+        CTL = 128, // 1=Send update when control settings have changed.
+        KYE = 256, // 1=Send update when ‘keycode enabled’ mask has changed.
     }
 
     [Flags]

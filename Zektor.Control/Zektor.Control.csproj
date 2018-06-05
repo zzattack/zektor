@@ -44,13 +44,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcknowledgeResponse.cs" />
-    <Compile Include="Advanced\GetRecentError.cs" />
+    <Compile Include="Advanced\KeyEnable.cs" />
+    <Compile Include="Advanced\RecentError.cs" />
     <Compile Include="Advanced\ControlSettings.cs" />
-    <Compile Include="Advanced\EmulateKeyPress.cs" />
-    <Compile Include="Advanced\GetFirmwareInfo.cs" />
-    <Compile Include="Advanced\IpAddress.cs" />
-    <Compile Include="Advanced\QueryCapabilities.cs" />
-    <Compile Include="Advanced\SetLedIntensities.cs" />
+    <Compile Include="Advanced\KeyEmulation.cs" />
+    <Compile Include="Advanced\FirmwareInfo.cs" />
+    <Compile Include="Advanced\IpAddressInfo.cs" />
+    <Compile Include="Advanced\QueryCapabilityInfo.cs" />
+    <Compile Include="Advanced\LedIntensities.cs" />
     <Compile Include="Advanced\TransmitEnableFlags.cs" />
     <Compile Include="Audio\MasterVolume.cs" />
     <Compile Include="Audio\CompositeConverterSettings.cs" />
@@ -62,7 +63,7 @@
     <Compile Include="Audio\VolumeToneStepSize.cs" />
     <Compile Include="Audio\LevelAdjust.cs" />
     <Compile Include="Basic\DelaySwitchZones.cs" />
-    <Compile Include="Basic\MultiZoneCommand.cs" />
+    <Compile Include="MultiZoneCommand.cs" />
     <Compile Include="Basic\QueryStatus.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Basic\PowerControl.cs" />

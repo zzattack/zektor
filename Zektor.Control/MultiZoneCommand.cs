@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Zektor.Control.Basic {
+namespace Zektor.Control {
     /// <summary>
     /// Many commands take a number of zones and some specific kind of parameter.
     /// This can serve as base class for parsing and formatting such commands.
