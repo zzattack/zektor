@@ -1,11 +1,11 @@
 ﻿using System.Text;
 
-namespace Zektor.Control.Audio {
+namespace Zektor.Protocol.Audio {
     public class CompositeConverterSettings : ZektorControlCommand {
-        public override string Command => "CCV";
+        protected override string Command => "CCV";
 
         public int ConverterIdx { get; set; }
-        public InputChannel Input { get; set; }
+        public VideoInputChannel VideoInput { get; set; }
         public int Contrast { get; set; }
         public int Brightness { get; set; }
         public int Saturation { get; set; }
@@ -18,7 +18,7 @@ namespace Zektor.Control.Audio {
                 sb.Append('?');
             }
             else {
-                sb.AppendFormat(",{0}", (int)Input);
+                sb.AppendFormat(",{0}", (int)VideoInput);
                 sb.AppendFormat(",{0}", Contrast);
                 sb.AppendFormat(",{0}", Brightness);
                 sb.AppendFormat(",{0}", Saturation);
@@ -30,7 +30,7 @@ namespace Zektor.Control.Audio {
             string[] parts = cmd.Split(',');
             if (parts.Length != 6) return false;
             ConverterIdx = int.Parse(parts[0]);
-            Input = (InputChannel)int.Parse(parts[1]);
+            VideoInput = (VideoInputChannel)int.Parse(parts[1]);
             Contrast = int.Parse(parts[2]);
             Brightness = int.Parse(parts[3]);
             Saturation = int.Parse(parts[4]);

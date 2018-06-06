@@ -1,46 +1,63 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
-namespace Zektor.Control {
+namespace Zektor.Protocol {
     public abstract class ZektorControlCommand : ZektorCommand {
-        public abstract string Command { get; }
-        public bool IsQueryResponse { get; set; }
-        public bool IsQueryRequest { get; set; }
-        public override bool Parse(List<byte> data) {
-            if (data.Count < Command.Length) return false;
+        protected abstract string Command { get; }
+        public bool IsQueryResponse { get; protected set; }
+        public bool IsQueryRequest { protected get; set; }
+
+        protected override bool Parse(string data) {
+            if (data.Length < Command.Length) return false;
 
             int idx = 0;
             // lines either start with '=' follower by command,
             if (data[0] == '=') {
-                idx++;
                 IsQueryResponse = true;
+                idx++;
             }
 
             // or lines start directly with command
-            var bs = Encoding.ASCII.GetBytes(Command);
-            if (!bs.SequenceEqual(data.Skip(idx).Take(bs.Length))) return false;
+            if (!data.Substring(idx).StartsWith(Command)) return false;
 
-            idx += bs.Length; // skip command name
+            idx += Command.Length; // skip command name
+
+            // after command, either a space or '.ch' should follow
+            char nextCh = data[idx];
+            if (nextCh != '.' && nextCh != ' ') return false;
+            
 
             // most commands have a space directly after the name, if so, skip it
             if (data[idx] == ' ') idx++;
 
-            string cmd = Encoding.Default.GetString(data.ToArray(), idx, data.Count - idx);
-            return ParseCommand(cmd);
+            if (idx > 0)
+                data = data.Remove(0, idx);
+
+            return ParseCommand(data);
         }
 
-        protected override string FormatLine() {
+        protected override string Format() {
             StringBuilder sb = new StringBuilder();
             if (IsQueryResponse) sb.Append('=');
             sb.Append(Command);
+
+            if (this is IHasChannel ich) {
+                if (ich.Channels != ChannelBitmap.All)
+                    sb.AppendFormat(".{0}", (int)ich.Channels);
+            }
             sb.Append(' ');
 
             FormatCommand(sb);
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Format command to StringBuilder.
+        /// Do not append '=' for responses.
+        /// Do not append Command name or initial space
+        /// </summary>
+        /// <param name="sb"></param>
         protected abstract void FormatCommand(StringBuilder sb);
+
         /// <summary>
         /// Parse command from string.
         /// Prefix and (optional) '=' prefix are already stripped.
@@ -60,5 +77,9 @@ namespace Zektor.Control {
             return ret;
         }
 
+    }
+
+    public interface IHasChannel {
+        ChannelBitmap Channels { get; } 
     }
 }

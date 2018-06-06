@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Zektor.Control {
+﻿namespace Zektor.Protocol {
     public class AcknowledgeResponse : ZektorCommand {
-        public override bool Parse(List<byte> data) {
-            return data.Count == 1 && data[0] == '+';
+        protected override bool Parse(string data) {
+            return data.Length == 1 && data[0] == '+';
         }
-        protected override string FormatLine() {
+        protected override string Format() {
             return "+";
         }
     }

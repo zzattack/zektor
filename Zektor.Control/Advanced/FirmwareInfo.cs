@@ -1,8 +1,8 @@
 ﻿using System.Text;
 
-namespace Zektor.Control.Advanced {
+namespace Zektor.Protocol.Advanced {
     public class FirmwareInfo : ZektorControlCommand {
-        public override string Command => "V";
+        protected override string Command => "V";
         public string Model { get; set; }
         public string FirmwareVersion { get; set; }
         public string SerialNumber { get; set; }

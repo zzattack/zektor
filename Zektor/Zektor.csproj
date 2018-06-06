@@ -52,6 +52,12 @@
     <Compile Include="AVControls.Designer.cs">
       <DependentUpon>AVControls.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConnectionSetupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectionSetupForm.Designer.cs">
+      <DependentUpon>ConnectionSetupForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

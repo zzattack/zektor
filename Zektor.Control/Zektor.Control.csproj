@@ -7,8 +7,8 @@
     <ProjectGuid>{B03040F6-3A25-43A2-841A-82F0B5D04573}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Zektor.Control</RootNamespace>
-    <AssemblyName>Zektor.Control</AssemblyName>
+    <RootNamespace>Zektor.Protocol</RootNamespace>
+    <AssemblyName>Zektor.Protocol</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -63,16 +63,18 @@
     <Compile Include="Audio\VolumeToneStepSize.cs" />
     <Compile Include="Audio\LevelAdjust.cs" />
     <Compile Include="Basic\DelaySwitchZones.cs" />
+    <Compile Include="DeviceState.cs" />
     <Compile Include="MultiZoneCommand.cs" />
     <Compile Include="Basic\QueryStatus.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Basic\PowerControl.cs" />
     <Compile Include="Basic\SetZone.cs" />
-    <Compile Include="Basic\MuteZones.cs" />
+    <Compile Include="Basic\MuteZone.cs" />
     <Compile Include="ZektorCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ZektorControlCommand.cs" />
     <Compile Include="ZektorProtocol.cs" />
+    <Compile Include="ZoneState.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\UMTS\SPAA05 Library\SPAA05.Shared\SPAA05.Shared.csproj">

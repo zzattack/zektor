@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
-namespace Zektor.Control.Basic {
+namespace Zektor.Protocol.Basic {
     public class QueryStatus : ZektorControlCommand {
-        public override string Command => "Q";
+        protected override string Command => "Q";
         public QueryFlags QueryFlags { get; set; }
 
         protected override bool ParseCommand(string cmd) {
@@ -35,12 +34,12 @@ namespace Zektor.Control.Basic {
     }
 
     public class QuerySetZonesStatus : QueryZoneStatus {
-        public override string Command => "QSZ";
+        protected override string Command => "QSZ";
     }
     public class QueryMuteZonesStatus : QueryZoneStatus {
-        public override string Command => "QMZ";
+        protected override string Command => "QMZ";
     }
     public class QueryDelayZonesStatus : QueryZoneStatus {
-        public override string Command => "QDZ";
+        protected override string Command => "QDZ";
     }
 }

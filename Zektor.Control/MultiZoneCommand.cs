@@ -2,16 +2,16 @@
 using System.Linq;
 using System.Text;
 
-namespace Zektor.Control {
+namespace Zektor.Protocol {
     /// <summary>
     /// Many commands take a number of zones and some specific kind of parameter.
     /// This can serve as base class for parsing and formatting such commands.
     /// </summary>
     /// <typeparam name="T">The specific type of parameter for inheriting commands.</typeparam>
     /// 
-    public abstract class MultiZoneCommand<T> : ZektorControlCommand {
+    public abstract class MultiZoneCommand<T> : ZektorControlCommand, IZoneCommand, IHasChannel {
         public List<(HashSet<int>, T)> Zones = new List<(HashSet<int>, T)>();
-        public ChannelBitmap Channels = ChannelBitmap.All;
+        public ChannelBitmap Channels { get; set; } = ChannelBitmap.All;
 
         protected override bool ParseCommand(string cmd) {
             Channels = ConsumeChannel(ref cmd);
@@ -44,9 +44,6 @@ namespace Zektor.Control {
         }
 
         protected override void FormatCommand(StringBuilder sb) {
-            if (Channels != ChannelBitmap.All)
-                sb.AppendFormat(".{0}", (int)Channels);
-
             foreach (var zone in Zones) {
                 foreach (var zoneEntry in zone.Item1) {
                     sb.Append('@');
@@ -66,10 +63,19 @@ namespace Zektor.Control {
 
         protected abstract T ParseParam(string str);
         protected abstract string FormatParam(T param);
-
-        public void MakeSimple(int zone, T param) {
-            Zones.Clear();
-            Zones.Add(  (new HashSet<int> { zone }, param)  );
+        
+        public IEnumerable<int> AffectedZones {
+            get {
+                foreach (var zoneSet in Zones) {
+                    foreach (var zone in zoneSet.Item1)
+                        yield return zone - 1;
+                }
+            }
         }
     }
+
+    public interface IZoneCommand {
+        IEnumerable<int> AffectedZones { get; }
+    }
+
 }

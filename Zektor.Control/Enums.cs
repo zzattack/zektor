@@ -1,15 +1,13 @@
 ﻿using System;
 
-namespace Zektor.Control {
+namespace Zektor.Protocol {
 
-
-    public enum PowerAction {
+    public enum PowerState {
         PowerOff = '0',
         PowerOn = '1',
         Toggle = '+',
         None
     }
-
     public enum MuteOption {
         NonMuted = '0',
         Muted = '1',
@@ -37,6 +35,7 @@ namespace Zektor.Control {
     }
 
     public enum ErrorCode {
+        NoError = 0,
         UnrecognizedCommand = 1,
         ParameterOutOfRange = 2,
         SyntaxError = 3,
@@ -47,10 +46,20 @@ namespace Zektor.Control {
         InvalidState = 8,
     }
 
-    public enum KeyEnableState {
+    public enum LightingMode {
+        Off = 0,
+        Dim = 1,
+        Bright = 2,
+        AutoDim = 3,
+    }
+    public enum EnableState {
         Disabled = '0',
         Enabled = '1',
         Toggle = '+',
+    }
+    public enum BitState {
+        Disable = '-',
+        Enable = '+',
         None
     }
 
@@ -81,10 +90,11 @@ namespace Zektor.Control {
 
     [Flags]
     public enum ExtendedSettings {
+        None = 0,
         ASY = 1, // 0=Polled mode, 1=Asynchronous Mode
         ACK = 2, // acknowledge cmds with ^+$
         ECO = 4, // send response string when a serial command is issued
-        CHN = 8, // 0=Only send a “.ch” when needed, 1=Always append a “.ch” channel mask to a zone response cmd
+        CHM = 8, // 0=Only send a “.ch” when needed, 1=Always append a “.ch” channel mask to a zone response cmd
         CRE = 16, // send CRs/LFs at end of responses1
         CSE = 32, // append checksum to commands
         SET = 64, // setup option enabled
@@ -93,14 +103,16 @@ namespace Zektor.Control {
         IRE = 512, // 0=Use ‘IRE’ settings for IR control, 1=Enable all IR commands, overrides ‘IRE’ settings.
         IRS = 1024, // IR sensor enabled
         IRJ = 2048, // IR jack enabled
-        AON = 4096, // 0=Disable front panel keys, overrides ‘KYE’, 1=Enable front panel keys (allows ‘KYE’ and ‘KE’ settings).
-        _12V = 8192, // 0=Classic Analog/Digital mode, 1=Automatic conversion of Analog/Digital paths
+        KYD = 4096, // 0=Disable front panel keys, overrides ‘KYE’, 1=Enable front panel keys (allows ‘KYE’ and ‘KE’ settings).
+        AUT = 8192, // 0=Classic Analog/Digital mode, 1=Automatic conversion of Analog/Digital paths
         VMU = 16384, // video muting when a zone is muted
-        AMU = 32768, // audio muting when a zone is muted
+        AMU = 32768, // audio muting when a zone is muted,
+        All = 65535
     }
 
     [Flags]
     public enum TransmitEnableSettings {
+        None = 0,
         PWR = 1, // 1=Send update when power state has changed
         QSZ = 2, // 1=Send update when selection (Source / Zone Mapping) has changed
         QMZ = 4, // 1=Send update when mute settings have changed.
@@ -110,18 +122,37 @@ namespace Zektor.Control {
         LMI = 64, // 1=Send update when light mode and / or intensities have changed.
         CTL = 128, // 1=Send update when control settings have changed.
         KYE = 256, // 1=Send update when ‘keycode enabled’ mask has changed.
+        All = 511,
     }
 
     [Flags]
     public enum ChannelBitmap {
         YPbPrVideo = 1,
         AnalogAudio = 2,
+        Audio = 2,
         DigitalAudio = 4,
         All = 7
     }
 
 
     public enum InputChannel {
+        Input1,
+        Input2,
+        Input3,
+        Input4,
+        Input5,
+        Input6,
+        Input7,
+        Input8,
+        Input9,
+        Input10,
+        Input11,
+        Next, // next channel in sequence
+        Prev, // prev channel in sequence
+        None,
+    }
+
+    public enum VideoInputChannel {
         Composite1,
         Composite2,
         Composite3,

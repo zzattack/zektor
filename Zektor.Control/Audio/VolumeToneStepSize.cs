@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Zektor.Control.Audio {
+namespace Zektor.Protocol.Audio {
     public class VolumeToneStepSize : ZektorControlCommand {
         protected override bool ParseCommand(string cmd) {
             return false;
@@ -10,6 +10,6 @@ namespace Zektor.Control.Audio {
         }
 
 
-        public override string Command => "VTS";
+        protected override string Command => "VTS";
     }
 }

@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Zektor.Control.Advanced {
+namespace Zektor.Protocol.Advanced {
+    using KeyDefinition = ValueTuple<string, int, int>;
+
     public class KeyEmulation : ZektorControlCommand {
-        public override string Command => "K";
+        protected override string Command => "K";
         public List<int> KeyCodes { get; } = new List<int>();
-        public static readonly List<(string, int, int)> KeyDefinitions;
+        public static readonly List<KeyDefinition> KeyDefinitions;
 
         static KeyEmulation() {
-            KeyDefinitions.AddRange(new [] {
+            KeyDefinitions = new List<(string, int, int)> { 
                 // name, pressed code, released code
                 ("1", 1, 43),
                 ("2", 2, 44),
@@ -30,7 +33,7 @@ namespace Zektor.Control.Advanced {
                 ("A/V Toggle", 20, 62),
                 ("Power Toggle", 42, 63),
                 ("Exit Setup Mode", 0, 0),
-            });
+            };
         }
 
         protected override bool ParseCommand(string cmd) {

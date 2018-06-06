@@ -1,12 +1,16 @@
-﻿namespace Zektor.Control.Basic {
-    public class DelaySwitchZones : MultiZoneCommand<int> {
-        public override string Command => "DZ";
-        protected override string FormatParam(int param) {
-            return param.ToString();
+﻿using System;
+
+namespace Zektor.Protocol.Basic {
+    public class DelaySwitchZones : MultiZoneCommand<int?> {
+        protected override string Command => "DZ";
+
+        protected override int? ParseParam(string str) {
+            return int.TryParse(str, out int val) ? (int?)val : null;
         }
 
-        protected override int ParseParam(string str) {
-            return int.Parse(str);
+        protected override string FormatParam(int? param) {
+            return param.HasValue ? param.Value.ToString() : "";
         }
+
     }
 }

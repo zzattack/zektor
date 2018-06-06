@@ -1,9 +1,9 @@
 ﻿using System.Text;
 
-namespace Zektor.Control.Advanced {
+namespace Zektor.Protocol.Advanced {
     public class KeyEnable : ZektorControlCommand {
-        public override string Command => "KE";
-        public KeyEnableState State { get; set; } = KeyEnableState.None;
+        protected override string Command => "KE";
+        public EnableState State { get; set; }
         public int? KeyCode { get; set; }
 
         protected override bool ParseCommand(string cmd) {
@@ -14,6 +14,10 @@ namespace Zektor.Control.Advanced {
                 IsQueryRequest = true;
                 cmd.Remove(cmd.Length - 1);
             }
+
+            var parts = cmd.Split(',');
+            if (parts.Length >= 1) KeyCode = int.Parse(parts[0]);
+            if (parts.Length >= 2) State = (EnableState)parts[1][0];
 
             return true;
         }

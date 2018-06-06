@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPAA05.Shared", "..\..\UMTS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPAA05.Shared.UI", "..\..\UMTS\SPAA05 Library\SPAA05.Shared.UI\SPAA05.Shared.UI.csproj", "{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastColoredTextBox", "..\..\UMTS\SPAA05 Library\FastColoredTextBox\FastColoredTextBox.csproj", "{6DD14A85-CCFC-4774-BD26-0F5772512319}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.ReleaseWithLibs|Any CPU.ActiveCfg = Release|Any CPU
 		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.ReleaseWithLibs|Any CPU.Build.0 = Release|Any CPU
+		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DD14A85-CCFC-4774-BD26-0F5772512319}.DebugWithLibs|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DD14A85-CCFC-4774-BD26-0F5772512319}.DebugWithLibs|Any CPU.Build.0 = Debug|Any CPU
+		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DD14A85-CCFC-4774-BD26-0F5772512319}.ReleaseWithLibs|Any CPU.ActiveCfg = Release|Any CPU
+		{6DD14A85-CCFC-4774-BD26-0F5772512319}.ReleaseWithLibs|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

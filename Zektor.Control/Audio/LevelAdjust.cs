@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Zektor.Control.Basic;
-
-namespace Zektor.Control.Audio {
+﻿namespace Zektor.Protocol.Audio {
     public abstract class LevelAdjustCommand : MultiZoneCommand<LevelAdjustment> {
-        public override string Command => "VZ";
+        protected override string Command => "VZ";
         protected override string FormatParam(LevelAdjustment param) {
             if (param.AdjustMode == VolumeAdjust.Offset) {
                 if (param.Adjustment > 0) return $"+{param.Adjustment}";
@@ -37,33 +32,33 @@ namespace Zektor.Control.Audio {
     }
 
     public class ZoneVolumeAdjust : LevelAdjustCommand {
-        public override string Command => "VZ";
+        protected override string Command => "VZ";
     }
     public class BassLevelAdjust : LevelAdjustCommand {
-        public override string Command => "BAZ";
+        protected override string Command => "BAZ";
     }
     public class TrebleLevelAdjust : LevelAdjustCommand {
-        public override string Command => "TRZ";
+        protected override string Command => "TRZ";
     }
     public class Eq1z : LevelAdjustCommand {
         // 100Hz band
-        public override string Command => "EQ1Z";
+        protected override string Command => "EQ1Z";
     }
     public class Eq2z : LevelAdjustCommand {
         // 330Hz band
-        public override string Command => "EQ2Z";
+        protected override string Command => "EQ2Z";
     }
     public class Eq3z : LevelAdjustCommand {
         // 1kHz band
-        public override string Command => "EQ3Z";
+        protected override string Command => "EQ3Z";
     }
     public class Eq4z : LevelAdjustCommand {
         // 3.3kHz band
-        public override string Command => "EQ4Z";
+        protected override string Command => "EQ4Z";
     }
     public class Eq5z : LevelAdjustCommand {
         // 10kHz band
-        public override string Command => "EQ5Z";
+        protected override string Command => "EQ5Z";
     }
 
 }

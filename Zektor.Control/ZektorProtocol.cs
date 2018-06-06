@@ -5,7 +5,7 @@ using System.Reflection;
 using SPAA05.Shared.DataSources;
 using SPAA05.Shared.Protocol;
 
-namespace Zektor.Control {
+namespace Zektor.Protocol {
     public class ZektorProtocol : DataProtocol<ZektorCommand> {
         public const byte STX = (byte) '^';
         public const byte ETX = (byte) '$';
@@ -15,12 +15,17 @@ namespace Zektor.Control {
         protected override void AddToBuffer(DataSource o, DataReceivedEventArgs e) {
             foreach (byte b in e.Data) {
                 if (b == STX) {
+                    if (_buffer.Any())
+                        OnBogusReceived(_buffer);
+
                     _buffer.Clear();
                     _lineReceiving = true;
                 }
-                else if (_lineReceiving) {
-                    if (b == ETX) {
-                        Dispatch();
+                else {
+                    if (_lineReceiving && b == ETX) {
+                        if (!Dispatch(_buffer))
+                            OnBogusReceived(_buffer);
+                        
                         _lineReceiving = false;
                         _buffer.Clear();
                     }
@@ -28,11 +33,33 @@ namespace Zektor.Control {
                         _buffer.Add(b);
                     }
                 }
+
             }
         }
 
+        public DeviceState DeviceState { get; set; }
+        public override bool Write(ZektorCommand line) {
+            // if DeviceState is kept, match checksum preference
+            if (DeviceState != null && DeviceState.XS.HasValue && (DeviceState.XS & ExtendedSettings.CSE) != 0)
+                line.HasChecksum = true;
+            return base.Write(line);
+        }
+
+        protected override void OnBogusReceived(IEnumerable<byte> bs) {
+            var data = bs.ToList();
+
+            // trim whitespace
+            int front = 0, rear = data.Count - 1;
+            while (front < data.Count && char.IsWhiteSpace((char)data[front]))
+                front++;
+            while (rear > front && char.IsWhiteSpace((char)data[rear]))
+                rear--;
+            if (front < rear)
+                base.OnBogusReceived(data.GetRange(front, rear - front));
+        }
+
         private static readonly List<string> Types = new List<string>();
-        private Assembly typesAssembly = null;
+        private Assembly typesAssembly;
         protected override bool Dispatch(IEnumerable<byte> data) {
             if (typesAssembly == null) {
                 // gather types implementing ZektorCommand

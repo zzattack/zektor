@@ -1,24 +1,25 @@
 ﻿using System.Text;
 
-namespace Zektor.Control.Advanced {
-    public class RecentError : ZektorControlCommand {
-        private ErrorCode ErrorCode;
-        public override string Command => "!";
-        protected override bool ParseCommand(string cmd) {
-            if (cmd.Length > 0) {
+namespace Zektor.Protocol.Advanced {
+    public class RecentError : ZektorCommand {
+        public bool IsResponse { get; set; }
+        public ErrorCode ErrorCode { get; set; }
+        protected override bool Parse(string cmd) {
+            if (cmd.Length < 1 || cmd[0] != '!') return false;
+            if (cmd.Length > 1) {
                 ErrorCode = (ErrorCode)int.Parse(cmd.Substring(1));
-                IsQueryResponse = true;
+                IsResponse = true;
             }
-            else {
-                IsQueryRequest = true;
-            }
+            else IsResponse = false;
             return true;
         }
 
-        protected override void FormatCommand(StringBuilder sb) {
-            sb.Append("!");
-            if (IsQueryResponse)
+        protected override string Format() {
+            StringBuilder sb = new StringBuilder();
+            sb.Append('!');
+            if (IsResponse)
                 sb.Append((int)ErrorCode);
+            return sb.ToString();
         }
     }
 }

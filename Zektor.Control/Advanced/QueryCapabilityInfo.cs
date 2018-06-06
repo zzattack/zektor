@@ -1,8 +1,8 @@
 ﻿using System.Text;
 
-namespace Zektor.Control.Advanced {
+namespace Zektor.Protocol.Advanced {
     public class QueryCapabilityInfo : ZektorControlCommand {
-        public override string Command => "QI";
+        protected override string Command => "QI";
         public int NumZones { get; set; }
         public int NumInputs { get; set; }
         public int ChannelBitmap { get; set; }

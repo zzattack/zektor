@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using FastColoredTextBoxNS;
-using SPAA05.Shared.Protocol;
 using SPAA05.Shared.UI.ColorLoggers;
-using Zektor.Command;
-using Zektor.Control;
+using Zektor.Protocol;
 
 namespace Zektor {
     public class ZektorLogger : GenericColorLogger<ZektorCommand> {
@@ -50,12 +47,14 @@ namespace Zektor {
                     }
                     else if (b == '?') {
                         currentState = LineState.Query;
-                        // should always be directly followed by ETX
-                        nextState = LineState.ETX;
                     }
-                    else if (b == '$') {
-                        currentState = LineState.ETX;
-                    }
+                }
+                else if (b == ':') {
+                    currentState = LineState.Separator;
+                    nextState = LineState.Checksum;
+                }
+                if (b == '$') {
+                    currentState = LineState.ETX;
                 }
                 LogRaw(new string((char)b, 1), _styles[currentState]);
             }
@@ -71,6 +70,7 @@ namespace Zektor {
             Prefix,
             Separator,
             Query,
+            Checksum,
             ETX,
             None
         }
@@ -82,6 +82,7 @@ namespace Zektor {
             {LineState.Prefix, new TextStyle(Brushes.Orange, null, FontStyle.Regular)},
             {LineState.Separator, new TextStyle(Brushes.Brown, null, FontStyle.Regular)},
             {LineState.Query, new TextStyle(Brushes.CornflowerBlue, null, FontStyle.Regular)},
+            {LineState.Checksum, new TextStyle(Brushes.IndianRed, null, FontStyle.Regular)},
             {LineState.ETX, new TextStyle(Brushes.Green, null, FontStyle.Regular)},
         };
     }

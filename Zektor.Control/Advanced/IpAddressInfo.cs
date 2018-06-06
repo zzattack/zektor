@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Text;
 
-namespace Zektor.Control.Advanced {
+namespace Zektor.Protocol.Advanced {
     public class IpAddressInfo : ZektorControlCommand {
-        public override string Command => "IPA";
+        protected override string Command => "IPA";
 
         public System.Net.IPAddress IpAddress { get; set; }
 
@@ -25,7 +25,8 @@ namespace Zektor.Control.Advanced {
                 sb.Append('?');
             }
             else {
-                sb.Append(IpAddress);
+                var bs = IpAddress.GetAddressBytes();
+                sb.AppendFormat("{0:d3},{1:d3},{2:d3},{3:d3}", bs[0], bs[1], bs[2], bs[3]);
             }
         }
 
