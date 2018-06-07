@@ -3,14 +3,15 @@ using System.Linq;
 using System.Text;
 
 namespace Zektor.Protocol {
+
     /// <summary>
     /// Many commands take a number of zones and some specific kind of parameter.
     /// This can serve as base class for parsing and formatting such commands.
     /// </summary>
     /// <typeparam name="T">The specific type of parameter for inheriting commands.</typeparam>
-    /// 
-    public abstract class MultiZoneCommand<T> : ZektorControlCommand, IZoneCommand, IHasChannel {
-        public List<(HashSet<int>, T)> Zones = new List<(HashSet<int>, T)>();
+    ///
+    public abstract class MultiZoneCommand<T> : ZektorControlCommand, IZoneParameterCommand<T>, IZoneCommand, IHasChannel {
+        public List<(HashSet<int>, T)> Zones { get; private set; } = new List<(HashSet<int>, T)>();
         public ChannelBitmap Channels { get; set; } = ChannelBitmap.All;
 
         protected override bool ParseCommand(string cmd) {
@@ -24,7 +25,7 @@ namespace Zektor.Protocol {
                 if (part[0] == '@') zoneEntries.Add(int.Parse(part.Substring(1)));
                 else {
                     if (part == "?") {
-                        if (Zones.Count != 0) return false; // can only query for one set of zones
+                        if (!Zones.Any()) return false; // can only query for one set of zones
                         Zones.Add((zoneEntries, default(T)));
                         IsQueryRequest = true;
                     }
@@ -76,6 +77,10 @@ namespace Zektor.Protocol {
 
     public interface IZoneCommand {
         IEnumerable<int> AffectedZones { get; }
+    }
+
+    public interface IZoneParameterCommand<T> {
+        List<(HashSet<int>, T)> Zones { get; }
     }
 
 }

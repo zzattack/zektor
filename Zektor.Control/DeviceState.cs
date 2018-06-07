@@ -4,9 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
-using SPAA05.Shared.Properties;
-using SPAA05.Shared.Utility;
 using Zektor.Protocol.Advanced;
+using Zektor.Protocol.Annotations;
 using Zektor.Protocol.Audio;
 using Zektor.Protocol.Basic;
 
@@ -183,7 +182,6 @@ namespace Zektor.Protocol {
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -208,6 +206,7 @@ namespace Zektor.Protocol {
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

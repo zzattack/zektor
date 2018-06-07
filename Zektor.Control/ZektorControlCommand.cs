@@ -80,6 +80,6 @@ namespace Zektor.Protocol {
     }
 
     public interface IHasChannel {
-        ChannelBitmap Channels { get; } 
+        ChannelBitmap Channels { get; set; } 
     }
 }

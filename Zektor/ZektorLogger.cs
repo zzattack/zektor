@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using FastColoredTextBoxNS;
-using SPAA05.Shared.UI.ColorLoggers;
 using Zektor.Protocol;
 
 namespace Zektor {

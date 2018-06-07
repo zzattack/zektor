@@ -7,11 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zektor", "Zektor\Zektor.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zektor.Control", "Zektor.Control\Zektor.Control.csproj", "{B03040F6-3A25-43A2-841A-82F0B5D04573}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPAA05.Shared", "..\..\UMTS\SPAA05 Library\SPAA05.Shared\SPAA05.Shared.csproj", "{DFC72919-A118-4D54-8792-541C20ED60CD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPAA05.Shared.UI", "..\..\UMTS\SPAA05 Library\SPAA05.Shared.UI\SPAA05.Shared.UI.csproj", "{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastColoredTextBox", "..\..\UMTS\SPAA05 Library\FastColoredTextBox\FastColoredTextBox.csproj", "{6DD14A85-CCFC-4774-BD26-0F5772512319}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zektor.Shared", "Zektor.Shared\Zektor.Shared.csproj", "{DFC72919-A118-4D54-8792-541C20ED60CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,22 +41,6 @@ Global
 		{DFC72919-A118-4D54-8792-541C20ED60CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFC72919-A118-4D54-8792-541C20ED60CD}.ReleaseWithLibs|Any CPU.ActiveCfg = ReleaseWithLibs|Any CPU
 		{DFC72919-A118-4D54-8792-541C20ED60CD}.ReleaseWithLibs|Any CPU.Build.0 = ReleaseWithLibs|Any CPU
-		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.DebugWithLibs|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.DebugWithLibs|Any CPU.Build.0 = Debug|Any CPU
-		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.ReleaseWithLibs|Any CPU.ActiveCfg = Release|Any CPU
-		{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}.ReleaseWithLibs|Any CPU.Build.0 = Release|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.DebugWithLibs|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.DebugWithLibs|Any CPU.Build.0 = Debug|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.ReleaseWithLibs|Any CPU.ActiveCfg = Release|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.ReleaseWithLibs|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

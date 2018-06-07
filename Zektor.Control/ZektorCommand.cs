@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using SPAA05.Shared.Protocol;
+using Zektor.Shared.Protocol;
 
 namespace Zektor.Protocol {
 	public abstract class ZektorCommand : DataLine {

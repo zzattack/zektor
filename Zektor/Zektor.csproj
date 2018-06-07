@@ -33,8 +33,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FastColoredTextBox, Version=2.16.21.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL">
+      <HintPath>..\packages\FCTB.2.16.21.0\lib\FastColoredTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,11 +57,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AVControls.cs">
+    <Compile Include="AudioSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AVControls.Designer.cs">
-      <DependentUpon>AVControls.cs</DependentUpon>
+    <Compile Include="AudioSettingsControl.Designer.cs">
+      <DependentUpon>AudioSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ConnectionSetupForm.cs">
       <SubType>Form</SubType>
@@ -58,6 +69,7 @@
     <Compile Include="ConnectionSetupForm.Designer.cs">
       <DependentUpon>ConnectionSetupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GenericColorLog.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -73,8 +85,9 @@
     <Compile Include="ZoneMapControl.Designer.cs">
       <DependentUpon>ZoneMapControl.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AVControls.resx">
-      <DependentUpon>AVControls.cs</DependentUpon>
+    <Compile Include="ZoneOptimizer.cs" />
+    <EmbeddedResource Include="AudioSettingsControl.resx">
+      <DependentUpon>AudioSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -92,6 +105,7 @@
     <EmbeddedResource Include="ZoneMapControl.resx">
       <DependentUpon>ZoneMapControl.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -106,21 +120,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\UMTS\SPAA05 Library\FastColoredTextBox\FastColoredTextBox.csproj">
-      <Project>{6dd14a85-ccfc-4774-bd26-0f5772512319}</Project>
-      <Name>FastColoredTextBox</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\UMTS\SPAA05 Library\SPAA05.Shared.UI\SPAA05.Shared.UI.csproj">
-      <Project>{F6336C24-8FE9-4DBF-927E-CC45A7C9A309}</Project>
-      <Name>SPAA05.Shared.UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\UMTS\SPAA05 Library\SPAA05.Shared\SPAA05.Shared.csproj">
-      <Project>{dfc72919-a118-4d54-8792-541c20ed60cd}</Project>
-      <Name>SPAA05.Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Zektor.Control\Zektor.Control.csproj">
       <Project>{b03040f6-3a25-43a2-841a-82f0b5d04573}</Project>
       <Name>Zektor.Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Zektor.Shared\Zektor.Shared.csproj">
+      <Project>{dfc72919-a118-4d54-8792-541c20ed60cd}</Project>
+      <Name>Zektor.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

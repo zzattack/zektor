@@ -36,10 +36,17 @@
             this.lblDigitalAudio = new System.Windows.Forms.Label();
             this.cbDigitalAudioInput = new System.Windows.Forms.ComboBox();
             this.gbIOs = new System.Windows.Forms.GroupBox();
+            this.nudDigitalAudioDelay = new System.Windows.Forms.NumericUpDown();
+            this.nudAnalogAudioDelay = new System.Windows.Forms.NumericUpDown();
+            this.nudVideoDelay = new System.Windows.Forms.NumericUpDown();
+            this.lblSwitchDelay = new System.Windows.Forms.Label();
             this.btnChange = new System.Windows.Forms.Button();
             this.btnRead = new System.Windows.Forms.Button();
             this.lblUnknownAudioMode = new System.Windows.Forms.Label();
             this.gbIOs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDigitalAudioDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudAnalogAudioDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudVideoDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // lblZone
@@ -58,7 +65,7 @@
             this.ckbBreakaway.Checked = true;
             this.ckbBreakaway.CheckState = System.Windows.Forms.CheckState.Indeterminate;
             this.ckbBreakaway.Enabled = false;
-            this.ckbBreakaway.Location = new System.Drawing.Point(191, 31);
+            this.ckbBreakaway.Location = new System.Drawing.Point(181, 31);
             this.ckbBreakaway.Name = "ckbBreakaway";
             this.ckbBreakaway.Size = new System.Drawing.Size(100, 17);
             this.ckbBreakaway.TabIndex = 1;
@@ -194,6 +201,10 @@
             // 
             // gbIOs
             // 
+            this.gbIOs.Controls.Add(this.nudDigitalAudioDelay);
+            this.gbIOs.Controls.Add(this.nudAnalogAudioDelay);
+            this.gbIOs.Controls.Add(this.nudVideoDelay);
+            this.gbIOs.Controls.Add(this.lblSwitchDelay);
             this.gbIOs.Controls.Add(this.btnChange);
             this.gbIOs.Controls.Add(this.btnRead);
             this.gbIOs.Controls.Add(this.ckbMuteDigitalAudio);
@@ -207,13 +218,61 @@
             this.gbIOs.Controls.Add(this.label1);
             this.gbIOs.Controls.Add(this.lblAnalogAudio);
             this.gbIOs.Enabled = false;
-            this.gbIOs.Location = new System.Drawing.Point(10, 26);
+            this.gbIOs.Location = new System.Drawing.Point(6, 26);
             this.gbIOs.Name = "gbIOs";
-            this.gbIOs.Size = new System.Drawing.Size(300, 145);
+            this.gbIOs.Size = new System.Drawing.Size(364, 145);
             this.gbIOs.TabIndex = 27;
             this.gbIOs.TabStop = false;
             this.gbIOs.Text = "I/O selection";
             this.gbIOs.Visible = false;
+            // 
+            // nudDigitalAudioDelay
+            // 
+            this.nudDigitalAudioDelay.Location = new System.Drawing.Point(297, 111);
+            this.nudDigitalAudioDelay.Maximum = new decimal(new int[] {
+            35000,
+            0,
+            0,
+            0});
+            this.nudDigitalAudioDelay.Name = "nudDigitalAudioDelay";
+            this.nudDigitalAudioDelay.Size = new System.Drawing.Size(60, 20);
+            this.nudDigitalAudioDelay.TabIndex = 33;
+            this.nudDigitalAudioDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // nudAnalogAudioDelay
+            // 
+            this.nudAnalogAudioDelay.Location = new System.Drawing.Point(297, 85);
+            this.nudAnalogAudioDelay.Maximum = new decimal(new int[] {
+            35000,
+            0,
+            0,
+            0});
+            this.nudAnalogAudioDelay.Name = "nudAnalogAudioDelay";
+            this.nudAnalogAudioDelay.Size = new System.Drawing.Size(60, 20);
+            this.nudAnalogAudioDelay.TabIndex = 32;
+            this.nudAnalogAudioDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // nudVideoDelay
+            // 
+            this.nudVideoDelay.Location = new System.Drawing.Point(297, 57);
+            this.nudVideoDelay.Maximum = new decimal(new int[] {
+            35000,
+            0,
+            0,
+            0});
+            this.nudVideoDelay.Name = "nudVideoDelay";
+            this.nudVideoDelay.Size = new System.Drawing.Size(60, 20);
+            this.nudVideoDelay.TabIndex = 31;
+            this.nudVideoDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblSwitchDelay
+            // 
+            this.lblSwitchDelay.AutoSize = true;
+            this.lblSwitchDelay.Location = new System.Drawing.Point(291, 27);
+            this.lblSwitchDelay.Name = "lblSwitchDelay";
+            this.lblSwitchDelay.Size = new System.Drawing.Size(69, 26);
+            this.lblSwitchDelay.TabIndex = 29;
+            this.lblSwitchDelay.Text = "Switch delay\r\n(milliseconds)";
             // 
             // btnChange
             // 
@@ -255,9 +314,12 @@
             this.Controls.Add(this.gbIOs);
             this.Controls.Add(this.lblUnknownAudioMode);
             this.Name = "ZoneMapControl";
-            this.Size = new System.Drawing.Size(323, 174);
+            this.Size = new System.Drawing.Size(375, 174);
             this.gbIOs.ResumeLayout(false);
             this.gbIOs.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDigitalAudioDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudAnalogAudioDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudVideoDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -281,5 +343,9 @@
         private System.Windows.Forms.Label lblUnknownAudioMode;
         private System.Windows.Forms.Button btnChange;
         private System.Windows.Forms.Button btnRead;
+        private System.Windows.Forms.NumericUpDown nudDigitalAudioDelay;
+        private System.Windows.Forms.NumericUpDown nudAnalogAudioDelay;
+        private System.Windows.Forms.NumericUpDown nudVideoDelay;
+        private System.Windows.Forms.Label lblSwitchDelay;
     }
 }

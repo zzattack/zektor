@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
 using Zektor.Protocol;
 using Zektor.Protocol.Basic;
@@ -45,12 +44,14 @@ namespace Zektor {
                     lblDigitalAudio.Visible = false;
                     ckbMuteDigitalAudio.Visible = false;
                     cbDigitalAudioInput.Visible = false;
+                    nudDigitalAudioDelay.Visible = false;
                 }
                 else {
                     lblAnalogAudio.Text = "Analog audio input";
                     lblDigitalAudio.Visible = true;
                     ckbMuteDigitalAudio.Visible = true;
                     cbDigitalAudioInput.Visible = true;
+                    nudDigitalAudioDelay.Visible = true;
                 }
             }
             else {
@@ -74,9 +75,42 @@ namespace Zektor {
             else
                 cbDigitalAudioInput.SelectedIndex = -1;
 
+            // update mute checkboxes
             ckbMuteVideo.CheckState = CheckStateFrom(_zs.VideoMute);
             ckbMuteAnalogAudio.CheckState = CheckStateFrom(_zs.AnalogAudioMute);
             ckbMuteDigitalAudio.CheckState = CheckStateFrom(_zs.DigitalAudioMute);
+            
+            // update num up/downs
+            if (_zs.VideoDelay.HasValue) {
+                SetBogusValue(nudVideoDelay); // so text is re-written
+                nudVideoDelay.Value = _zs.VideoDelay.Value;
+            }
+            else { // clear box
+                nudVideoDelay.Text = "";
+                nudVideoDelay.Refresh();
+            }
+
+            if (_zs.AnalogAudioDelay.HasValue) {
+                SetBogusValue(nudAnalogAudioDelay);
+                nudAnalogAudioDelay.Value = _zs.AnalogAudioDelay.Value;
+            }
+            else {
+                nudAnalogAudioDelay.Text = "";
+                nudAnalogAudioDelay.Refresh();
+            }
+
+            if (_zs.DigitalAudioDelay.HasValue) {
+                SetBogusValue(nudDigitalAudioDelay);
+                nudDigitalAudioDelay.Value = _zs.DigitalAudioDelay.Value;
+            }
+            else {
+                nudDigitalAudioDelay.Text = "";
+                nudDigitalAudioDelay.Refresh();
+            }
+        }
+
+        private void SetBogusValue(NumericUpDown numericUpDown) {
+            numericUpDown.Value = numericUpDown.Value == numericUpDown.Minimum ? numericUpDown.Maximum : numericUpDown.Minimum;
         }
 
         private CheckState CheckStateFrom(MuteOption? mu) {
@@ -88,7 +122,9 @@ namespace Zektor {
         }
 
         private void btnRead_Click(object sender, EventArgs e) {
-            _zs.Reset();
+            _zs.ResetZoneInputs();
+            Refresh();
+
             var zoneList = new HashSet<int> { _zs.Index };
 
             var reqs = new ZektorCommand[] {
@@ -101,109 +137,34 @@ namespace Zektor {
 
         private void btnChange_Click(object sender, EventArgs e) {
             var reqs = new List<ZektorCommand>();
-            reqs.AddRange(OptimizeInputs());
-            reqs.AddRange(OptimizeMutes());
 
-            _zs.Reset(); // now current selection may be invalidated
+            bool splitAudio = !_ds.XS.HasValue || (_ds.XS & ExtendedSettings.AUT) == 0;
+
+            // optimize zones using the helper class
+            reqs.AddRange(ZoneOptimizer<SetZone, InputChannel?>.OptimizeChannelBasedParameter(
+                _zs.Index, splitAudio,
+                (InputChannel)cbVideoInput.SelectedIndex,
+                (InputChannel)cbAnalogAudioInput.SelectedIndex,
+                (InputChannel)cbDigitalAudioInput.SelectedIndex));
+
+            reqs.AddRange(ZoneOptimizer<MuteZone, MuteOption?>.OptimizeChannelBasedParameter(
+                _zs.Index, splitAudio,
+                ckbMuteVideo.Checked ? MuteOption.Muted : MuteOption.NonMuted,
+                ckbMuteAnalogAudio.Checked ? MuteOption.Muted : MuteOption.NonMuted,
+                ckbMuteDigitalAudio.Checked ? MuteOption.Muted : MuteOption.NonMuted));
+
+            reqs.AddRange(ZoneOptimizer<DelaySwitchZones, int?>.OptimizeChannelBasedParameter(
+                _zs.Index, splitAudio,
+                (int)nudVideoDelay.Value,
+                (int)nudAnalogAudioDelay.Value,
+                (int)nudDigitalAudioDelay.Value));
+
+            _zs.ResetZoneInputs(); // now current selection may be invalidated
 
             OnRequestLineTransmit(new RequestLinesTransmitArgs(reqs));
         }
 
-        private List<SetZone> OptimizeInputs() {
-            var sz = new List<SetZone>();
-
-            // first make zone for video channel
-            var videoZone = new SetZone();
-            SetZone audioZone = null;
-
-            videoZone.Channels = ChannelBitmap.YPbPrVideo;
-            (HashSet<int>, InputChannel?) tup = (new HashSet<int>{_zs.Index}, (InputChannel)cbVideoInput.SelectedIndex);
-            videoZone.Zones.Add(tup);
-            sz.Add(videoZone);
-
-            if (cbAnalogAudioInput.SelectedIndex == cbVideoInput.SelectedIndex) {
-                // audio and video index is similar, so just update bitmap
-                videoZone.Channels |= ChannelBitmap.AnalogAudio;
-            }
-            else {
-                audioZone = new SetZone();
-                // analog audio will require unique line
-                audioZone.Channels = ChannelBitmap.AnalogAudio;
-                tup = (new HashSet<int> { _zs.Index }, (InputChannel)cbAnalogAudioInput.SelectedIndex);
-                audioZone.Zones.Add(tup);
-                sz.Add(audioZone);
-            }
-
-            // only if using classic mode, it may be possible to specify another digital audio source
-            if (!_ds.XS.HasValue || (_ds.XS & ExtendedSettings.AUT) == 0) {
-                // see if digital audio matches video channel
-                if (cbDigitalAudioInput.SelectedIndex == cbVideoInput.SelectedIndex)
-                    videoZone.Channels |= ChannelBitmap.DigitalAudio;
-
-                else if (audioZone != null && cbDigitalAudioInput.SelectedIndex == cbAnalogAudioInput.SelectedIndex)
-                    audioZone.Channels |= ChannelBitmap.DigitalAudio;
-
-                else {
-                    // also need unique command for digital audio
-                    var digiZone = new SetZone();
-                    digiZone.Channels = ChannelBitmap.DigitalAudio;
-                    tup = (new HashSet<int> { _zs.Index }, (InputChannel)cbDigitalAudioInput.SelectedIndex);
-                    digiZone.Zones.Add(tup);
-                    sz.Add(digiZone);
-                }
-            }
-            return sz;
-        }
-
-        private List<MuteZone> OptimizeMutes() {
-            var mz = new List<MuteZone>();
-
-            // first make zone for video channel
-            var videoZone = new MuteZone();
-            MuteZone audioZone = null;
-
-            videoZone.Channels = ChannelBitmap.YPbPrVideo;
-            (HashSet<int>, MuteOption?) tup = (new HashSet<int> { _zs.Index }, ckbMuteVideo.Checked ? MuteOption.Muted : MuteOption.NonMuted);
-            videoZone.Zones.Add(tup);
-            mz.Add(videoZone);
-
-            if (ckbMuteVideo.Checked == ckbMuteAnalogAudio.Checked) {
-                // audio and video index is similar, so just update bitmap
-                videoZone.Channels |= ChannelBitmap.AnalogAudio;
-            }
-            else {
-                audioZone = new MuteZone();
-                // analog audio will require unique line
-                audioZone.Channels = ChannelBitmap.AnalogAudio;
-                tup = (new HashSet<int> { _zs.Index }, ckbMuteAnalogAudio.Checked ? MuteOption.Muted : MuteOption.NonMuted);
-                audioZone.Zones.Add(tup);
-                mz.Add(audioZone);
-            }
-
-            // only if using classic mode, it may be possible to specify another digital audio source
-            if (!_ds.XS.HasValue || (_ds.XS & ExtendedSettings.AUT) == 0) {
-                // see if digital audio matches video channel
-                if (ckbMuteDigitalAudio.Checked == ckbMuteVideo.Checked)
-                    videoZone.Channels |= ChannelBitmap.DigitalAudio;
-
-                else if (audioZone != null && ckbMuteDigitalAudio.Checked == ckbMuteAnalogAudio.Checked)
-                    audioZone.Channels |= ChannelBitmap.DigitalAudio;
-
-                else {
-                    // also need unique command for digital audio
-                    var digiZone = new MuteZone();
-                    digiZone.Channels = ChannelBitmap.DigitalAudio;
-                    tup = (new HashSet<int> { _zs.Index }, ckbMuteDigitalAudio.Checked ? MuteOption.Muted : MuteOption.NonMuted);
-                    digiZone.Zones.Add(tup);
-                    mz.Add(digiZone);
-                }
-            }
-            return mz;
-        }
-
-
         public event EventHandler<RequestLinesTransmitArgs> RequestLineTransmit;
-
         protected virtual void OnRequestLineTransmit(RequestLinesTransmitArgs e) {
             RequestLineTransmit?.Invoke(this, e);
         }
@@ -222,10 +183,16 @@ namespace Zektor {
 
             // video idx different from digital selection: breakaway if classic mode only
             else {
-                if (_ds.XS.HasValue && !_ds.XS.Value.HasFlag(ExtendedSettings.AUT))
-                    ckbBreakaway.Checked = cbVideoInput.SelectedIndex != cbDigitalAudioInput.SelectedIndex;
-                else // can't tell
+                if (!_ds.XS.HasValue) // can't tell
                     ckbBreakaway.CheckState = CheckState.Indeterminate;
+
+                // in classic mode they all have to match
+                else if (!_ds.XS.Value.HasFlag(ExtendedSettings.AUT))
+                    ckbBreakaway.Checked = cbVideoInput.SelectedIndex != cbDigitalAudioInput.SelectedIndex;
+
+                // non-breakaway mode but video==analog (checked above)
+                else
+                    ckbBreakaway.Checked = false;
             }
 
         }

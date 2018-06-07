@@ -27,6 +27,13 @@
     }
 
     public class LevelAdjustment {
+        public LevelAdjustment() { }
+
+        public LevelAdjustment(int value, VolumeAdjust absolute) {
+            this.Adjustment = value;
+            this.AdjustMode = absolute;
+        }
+
         public VolumeAdjust AdjustMode { get; set; } = VolumeAdjust.Absolute;
         public int Adjustment { get; set; }
     }

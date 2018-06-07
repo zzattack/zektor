@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using SPAA05.Shared.DataSources;
+using Zektor.Shared.DataSources;
 
 namespace Zektor {
     public partial class ConnectionSetupForm : Form {

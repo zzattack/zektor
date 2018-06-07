@@ -6,13 +6,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SPAA05.Shared.DataSources;
-using SPAA05.Shared.UI.ColorLoggers;
-using SPAA05.Shared.Utility;
 using Zektor.Protocol;
 using Zektor.Protocol.Advanced;
 using Zektor.Protocol.Basic;
 using Zektor.Protocol.Audio;
+using Zektor.Shared.DataSources;
+using Zektor.Shared.Utility;
 using PowerState = Zektor.Protocol.PowerState;
 
 namespace Zektor {
@@ -101,7 +100,7 @@ namespace Zektor {
             }
 
             #endregion
-            
+
             #region Advanced tab
 
             if (e.PropertyName == nameof(DeviceState.IPAddress)) {
@@ -123,10 +122,14 @@ namespace Zektor {
                 // create necessary zone and input controls if they don't exist yet
                 if (flowLayoutZones.Controls.Count != _deviceState.Capabilities.NumZones) {
                     flowLayoutZones.Controls.Clear();
+                    flowLayoutAudioControls.Controls.Clear();
+
                     for (int i = 0; i < _deviceState.Capabilities.NumZones; i++) {
                         var zs = _deviceState.Zones[i];
                         var zc = NewZoneMapControl(zs);
                         flowLayoutZones.Controls.Add(zc);
+                        var ac = NewZoneAudioControl(zs);
+                        flowLayoutAudioControls.Controls.Add(ac);
                     }
                 }
 
@@ -186,6 +189,12 @@ namespace Zektor {
             return zc;
         }
 
+        private AudioSettingsControl NewZoneAudioControl(ZoneState zs) {
+            var ac = new AudioSettingsControl(zs, _deviceState);
+            ac.RequestLineTransmit += (sender, args) => args.Commands.ForEach(c => _proto.Write(c));
+            return ac;
+        }
+
         #region Connection events
         private void OnConnect(object sender, EventArgs e) {
             _logger.LogText("Connected to Zektor", LogMsgType.Success);
@@ -194,43 +203,32 @@ namespace Zektor {
 
             Task.Run(() => {
                 // knowing capabilities and extended settings first is useful
-                _proto.Write(new QueryCapabilityInfo {IsQueryRequest = true});
-                _proto.Write(new ControlSettings {IsQueryRequest = true});
+                _proto.Write(new QueryCapabilityInfo { IsQueryRequest = true });
+                _proto.Write(new ControlSettings { IsQueryRequest = true });
 
                 // next we can query whatever else we want to know
-                _proto.Write(new PowerControl {IsQueryRequest = true});
+                _proto.Write(new PowerControl { IsQueryRequest = true });
 
-                _proto.Write(new SetZone {
-                    IsQueryRequest = true,
-                    Channels = ChannelBitmap.All,
-                    Zones = {(new HashSet<int>(new Range(1, 8).Flatten()), null)},
-                });
-
-                _proto.Write(new MuteZone {
-                    IsQueryRequest = true,
-                    Channels = ChannelBitmap.All,
-                    Zones = {(new HashSet<int>(new Range(1, 8).Flatten()), null) },
-                });
-                _proto.Write(new MasterVolume {
-                    IsQueryRequest = true,
-                });
-                _proto.Write(new ZoneVolumeAdjust {
-                    IsQueryRequest = true,
-                    Zones = {(new HashSet<int>(new Range(1, 8).Flatten()), null)},
-                });
-                _proto.Write(new MixDownStereo {
-                    IsQueryRequest = true,
-                    Zones = {(new HashSet<int>(new Range(1, 8).Flatten()), null) },
-                });
-                _proto.Write(new DigitalRoute {
-                    IsQueryRequest = true,
-                    Zones = {(new HashSet<int>(new Range(1, 8).Flatten()), null) },
-                });
-                _proto.Write(new FirmwareInfo {IsQueryRequest = true});
+                var allZones = new HashSet<int>(new Range(1, 8).Flatten());
+                _proto.Write(new SetZone { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new MuteZone { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new DelaySwitchZones { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new MasterVolume { IsQueryRequest = true, });
+                _proto.Write(new ZoneVolumeAdjust { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new BassLevelAdjust { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new TrebleLevelAdjust { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new Eq1z { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new Eq2z { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new Eq3z { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new Eq4z { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new Eq5z { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new MixDownStereo { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new DigitalRoute { IsQueryRequest = true, Zones = { (allZones, null) }, });
+                _proto.Write(new FirmwareInfo { IsQueryRequest = true });
                 _proto.Write(new RecentError { });
-                _proto.Write(new TransmitEnable {IsQueryRequest = true});
-                _proto.Write(new LedIntensities {IsQueryRequest = true});
-                _proto.Write(new IpAddressInfo {IsQueryRequest = true});
+                _proto.Write(new TransmitEnable { IsQueryRequest = true });
+                _proto.Write(new LedIntensities { IsQueryRequest = true });
+                _proto.Write(new IpAddressInfo { IsQueryRequest = true });
             });
         }
 
@@ -252,7 +250,7 @@ namespace Zektor {
             lblConnectionStateVal.Text = "no";
         }
         #endregion
-        
+
         #region Main control tab UI events
         private void btnConnect_Click(object sender, EventArgs e) {
             if (_ds == null) btnSetup_Click(null, null);
@@ -297,7 +295,7 @@ namespace Zektor {
         private void btnReadMasterVolume_Click(object sender, EventArgs e) {
             // invalidate cache
             _deviceState.MasterVolume = null;
-            _proto.Write(new MasterVolume { IsQueryRequest = true});
+            _proto.Write(new MasterVolume { IsQueryRequest = true });
         }
 
         private void btnChangeMasterVolume_Click(object sender, EventArgs e) {

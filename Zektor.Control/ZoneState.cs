@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using SPAA05.Shared.Properties;
+using Zektor.Protocol.Annotations;
+using Zektor.Protocol.Audio;
 using Zektor.Protocol.Basic;
 
 namespace Zektor.Protocol {
@@ -16,6 +17,17 @@ namespace Zektor.Protocol {
         private int? _videoDelay;
         private int? _analogAudioDelay;
         private int? _digitalAudioDelay;
+        
+        private int? _volume;
+        private int? _bass;
+        private int? _treble;
+        private int? _eqBand1;
+        private int? _eqBand2;
+        private int? _eqBand3;
+        private int? _eqBand4;
+        private int? _eqBand5;
+        private StereoMixDownMode? _stereoMixdown;
+        private DigitalRouteOption? _digitalRoute;
 
         public ZoneState(int zoneIndex) {
             this.Index = zoneIndex;
@@ -102,6 +114,99 @@ namespace Zektor.Protocol {
             }
         }
 
+
+        public int? Volume {
+            get => _volume;
+            set {
+                if (value == _volume) return;
+                _volume = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public int? Bass {
+            get => _bass;
+            set {
+                if (value == _bass) return;
+                _bass = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public int? Treble {
+            get => _treble;
+            set {
+                if (value == _treble) return;
+                _treble = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public int? EqBand1 {
+            get => _eqBand1;
+            set {
+                if (value == _eqBand1) return;
+                _eqBand1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int? EqBand2 {
+            get => _eqBand2;
+            set {
+                if (value == _eqBand2) return;
+                _eqBand2 = value;
+                OnPropertyChanged();
+            }
+        }
+        
+
+        public int? EqBand3 {
+            get => _eqBand3;
+            set {
+                if (value == _eqBand3) return;
+                _eqBand3 = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public int? EqBand4 {
+            get => _eqBand4;
+            set {
+                if (value == _eqBand4) return;
+                _eqBand4 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int? EqBand5 {
+            get => _eqBand5;
+            set {
+                if (value == _eqBand5) return;
+                _eqBand5 = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public StereoMixDownMode? StereoMixdown {
+            get => _stereoMixdown;
+            set {
+                if (value == _stereoMixdown) return;
+                _stereoMixdown = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public DigitalRouteOption? DigitalRoute {
+            get => _digitalRoute;
+            set {
+                if (value == _digitalRoute) return;
+                _digitalRoute = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public void Update(ZektorCommand cmd) {
             if (cmd is SetZone sz && sz.IsQueryResponse) {
                 foreach (var (_, ch) in sz.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
@@ -124,8 +229,59 @@ namespace Zektor.Protocol {
                     if ((dz.Channels & ChannelBitmap.DigitalAudio) != 0) DigitalAudioDelay = delay;
                 }
             }
+            else if (cmd is ZoneVolumeAdjust zv && zv.IsQueryResponse) {
+                foreach (var (_, level) in zv.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    if (level.AdjustMode == VolumeAdjust.Absolute) Volume = level.Adjustment;
+                }
+            }
+            else if (cmd is BassLevelAdjust ba && ba.IsQueryResponse) {
+                foreach (var (_, level) in ba.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    if (level.AdjustMode == VolumeAdjust.Absolute) Bass = level.Adjustment;
+                }
+            }
+            else if (cmd is TrebleLevelAdjust ta && ta.IsQueryResponse) {
+                foreach (var (_, level) in ta.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    if (level.AdjustMode == VolumeAdjust.Absolute) Treble = level.Adjustment;
+                }
+            }
+            else if (cmd is Eq1z eq1 && eq1.IsQueryResponse) {
+                foreach (var (_, level) in eq1.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    if (level.AdjustMode == VolumeAdjust.Absolute) EqBand1 = level.Adjustment;
+                }
+            }
+            else if (cmd is Eq2z eq2 && eq2.IsQueryResponse) {
+                foreach (var (_, level) in eq2.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    if (level.AdjustMode == VolumeAdjust.Absolute) EqBand2 = level.Adjustment;
+                }
+            }
+            else if (cmd is Eq3z eq3 && eq3.IsQueryResponse) {
+                foreach (var (_, level) in eq3.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    if (level.AdjustMode == VolumeAdjust.Absolute) EqBand3 = level.Adjustment;
+                }
+            }
+            else if (cmd is Eq4z eq4 && eq4.IsQueryResponse) {
+                foreach (var (_, level) in eq4.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    if (level.AdjustMode == VolumeAdjust.Absolute) EqBand4 = level.Adjustment;
+                }
+            }
+            else if (cmd is Eq5z eq5 && eq5.IsQueryResponse) {
+                foreach (var (_, level) in eq5.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    if (level.AdjustMode == VolumeAdjust.Absolute) EqBand5 = level.Adjustment;
+                }
+            }
+            else if (cmd is MixDownStereo mds && mds.IsQueryResponse) {
+                foreach (var (_, sm) in mds.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    StereoMixdown = sm;
+                }
+            }
+            else if (cmd is DigitalRoute drz && drz.IsQueryResponse) {
+                foreach (var (_, dr) in drz.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    DigitalRoute = dr;
+                }
+            }
         }
-        public void Reset() {
+
+        public void ResetZoneInputs() {
             _videoInput = null;
             _analogAudioInput = null;
             _digitalAudioInput = null;
@@ -135,7 +291,20 @@ namespace Zektor.Protocol {
             _videoDelay = null;
             _analogAudioDelay = null;
             _digitalAudioDelay = null;
-            OnPropertyChanged("all");
+            OnPropertyChanged("inputs");
+        }
+        public void ResetZoneAudioControls() {
+            _volume = null;
+            _bass = null;
+            _treble = null;
+            _eqBand1 = null;
+            _eqBand2 = null;
+            _eqBand3 = null;
+            _eqBand4 = null;
+            _eqBand5 = null;
+            _stereoMixdown = null;
+            _digitalRoute = null;
+            OnPropertyChanged("audio");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -25,11 +25,11 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menu = new System.Windows.Forms.MenuStrip();
             this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
             this.tabs = new System.Windows.Forms.TabControl();
@@ -53,13 +53,15 @@
             this.btnPowerOn = new System.Windows.Forms.Button();
             this.gbZones = new System.Windows.Forms.GroupBox();
             this.flowLayoutZones = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblCapabilitiesUnknown = new System.Windows.Forms.Label();
             this.gbAudioMode = new System.Windows.Forms.GroupBox();
             this.btnReadAudioMode = new System.Windows.Forms.Button();
             this.btnChangeAudioMode = new System.Windows.Forms.Button();
             this.rbAudioModeClassic = new System.Windows.Forms.RadioButton();
             this.rbAudioModeAutoConvert = new System.Windows.Forms.RadioButton();
             this.tpAVControl = new System.Windows.Forms.TabPage();
+            this.flowLayoutAudioControls = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
             this.tpAdvanced = new System.Windows.Forms.TabPage();
             this.gbDeviceStatus = new System.Windows.Forms.GroupBox();
             this.btnReadCapabilities = new System.Windows.Forms.Button();
@@ -183,6 +185,8 @@
             this.gbZones.SuspendLayout();
             this.flowLayoutZones.SuspendLayout();
             this.gbAudioMode.SuspendLayout();
+            this.tpAVControl.SuspendLayout();
+            this.flowLayoutAudioControls.SuspendLayout();
             this.tpAdvanced.SuspendLayout();
             this.gbDeviceStatus.SuspendLayout();
             this.gbLedIntensity.SuspendLayout();
@@ -276,7 +280,7 @@
             // 
             // btnReadMasterVolume
             // 
-            this.btnReadMasterVolume.Location = new System.Drawing.Point(15, 27);
+            this.btnReadMasterVolume.Location = new System.Drawing.Point(15, 23);
             this.btnReadMasterVolume.Name = "btnReadMasterVolume";
             this.btnReadMasterVolume.Size = new System.Drawing.Size(75, 23);
             this.btnReadMasterVolume.TabIndex = 15;
@@ -286,7 +290,7 @@
             // 
             // btnChangeMasterVolume
             // 
-            this.btnChangeMasterVolume.Location = new System.Drawing.Point(15, 52);
+            this.btnChangeMasterVolume.Location = new System.Drawing.Point(15, 48);
             this.btnChangeMasterVolume.Name = "btnChangeMasterVolume";
             this.btnChangeMasterVolume.Size = new System.Drawing.Size(75, 23);
             this.btnChangeMasterVolume.TabIndex = 14;
@@ -451,21 +455,22 @@
             this.flowLayoutZones.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutZones.Controls.Add(this.label1);
+            this.flowLayoutZones.AutoScroll = true;
+            this.flowLayoutZones.Controls.Add(this.lblCapabilitiesUnknown);
             this.flowLayoutZones.Location = new System.Drawing.Point(22, 18);
             this.flowLayoutZones.Name = "flowLayoutZones";
             this.flowLayoutZones.Size = new System.Drawing.Size(942, 300);
             this.flowLayoutZones.TabIndex = 0;
             // 
-            // label1
+            // lblCapabilitiesUnknown
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(552, 145);
-            this.label1.TabIndex = 24;
-            this.label1.Text = "Device capabilities unknown. Connect first.";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblCapabilitiesUnknown.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCapabilitiesUnknown.Location = new System.Drawing.Point(3, 0);
+            this.lblCapabilitiesUnknown.Name = "lblCapabilitiesUnknown";
+            this.lblCapabilitiesUnknown.Size = new System.Drawing.Size(552, 145);
+            this.lblCapabilitiesUnknown.TabIndex = 24;
+            this.lblCapabilitiesUnknown.Text = "Device capabilities unknown. Connect first.";
+            this.lblCapabilitiesUnknown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // gbAudioMode
             // 
@@ -483,7 +488,7 @@
             // 
             // btnReadAudioMode
             // 
-            this.btnReadAudioMode.Location = new System.Drawing.Point(18, 27);
+            this.btnReadAudioMode.Location = new System.Drawing.Point(18, 23);
             this.btnReadAudioMode.Name = "btnReadAudioMode";
             this.btnReadAudioMode.Size = new System.Drawing.Size(75, 23);
             this.btnReadAudioMode.TabIndex = 15;
@@ -493,7 +498,7 @@
             // 
             // btnChangeAudioMode
             // 
-            this.btnChangeAudioMode.Location = new System.Drawing.Point(18, 52);
+            this.btnChangeAudioMode.Location = new System.Drawing.Point(18, 48);
             this.btnChangeAudioMode.Name = "btnChangeAudioMode";
             this.btnChangeAudioMode.Size = new System.Drawing.Size(75, 23);
             this.btnChangeAudioMode.TabIndex = 14;
@@ -504,7 +509,7 @@
             // rbAudioModeClassic
             // 
             this.rbAudioModeClassic.AutoSize = true;
-            this.rbAudioModeClassic.Location = new System.Drawing.Point(112, 55);
+            this.rbAudioModeClassic.Location = new System.Drawing.Point(112, 51);
             this.rbAudioModeClassic.Name = "rbAudioModeClassic";
             this.rbAudioModeClassic.Size = new System.Drawing.Size(87, 17);
             this.rbAudioModeClassic.TabIndex = 13;
@@ -516,7 +521,7 @@
             // rbAudioModeAutoConvert
             // 
             this.rbAudioModeAutoConvert.AutoSize = true;
-            this.rbAudioModeAutoConvert.Location = new System.Drawing.Point(112, 30);
+            this.rbAudioModeAutoConvert.Location = new System.Drawing.Point(112, 26);
             this.rbAudioModeAutoConvert.Name = "rbAudioModeAutoConvert";
             this.rbAudioModeAutoConvert.Size = new System.Drawing.Size(127, 17);
             this.rbAudioModeAutoConvert.TabIndex = 12;
@@ -527,6 +532,7 @@
             // 
             // tpAVControl
             // 
+            this.tpAVControl.Controls.Add(this.flowLayoutAudioControls);
             this.tpAVControl.Location = new System.Drawing.Point(4, 22);
             this.tpAVControl.Name = "tpAVControl";
             this.tpAVControl.Padding = new System.Windows.Forms.Padding(3);
@@ -534,6 +540,28 @@
             this.tpAVControl.TabIndex = 1;
             this.tpAVControl.Text = "A/V controls";
             this.tpAVControl.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutAudioControls
+            // 
+            this.flowLayoutAudioControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutAudioControls.AutoScroll = true;
+            this.flowLayoutAudioControls.Controls.Add(this.label1);
+            this.flowLayoutAudioControls.Location = new System.Drawing.Point(8, 6);
+            this.flowLayoutAudioControls.Name = "flowLayoutAudioControls";
+            this.flowLayoutAudioControls.Size = new System.Drawing.Size(989, 463);
+            this.flowLayoutAudioControls.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(552, 145);
+            this.label1.TabIndex = 24;
+            this.label1.Text = "Device capabilities unknown. Connect first.";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tpAdvanced
             // 
@@ -1553,9 +1581,9 @@
             // 
             // dgvcPress
             // 
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle11.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.dgvcPress.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.dgvcPress.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvcPress.HeaderText = "Press";
             this.dgvcPress.Name = "dgvcPress";
             this.dgvcPress.ReadOnly = true;
@@ -1563,9 +1591,9 @@
             // 
             // dgvcRelease
             // 
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle12.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.dgvcRelease.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.dgvcRelease.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvcRelease.HeaderText = "Release";
             this.dgvcRelease.Name = "dgvcRelease";
             this.dgvcRelease.ReadOnly = true;
@@ -1720,9 +1748,9 @@
             // 
             // dgvcKeyEnable
             // 
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle13.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.dgvcKeyEnable.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.dgvcKeyEnable.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvcKeyEnable.HeaderText = "Enable";
             this.dgvcKeyEnable.Name = "dgvcKeyEnable";
             this.dgvcKeyEnable.ReadOnly = true;
@@ -1730,9 +1758,9 @@
             // 
             // dgvcKeyDisable
             // 
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle14.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.dgvcKeyDisable.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.dgvcKeyDisable.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvcKeyDisable.HeaderText = "Disable";
             this.dgvcKeyDisable.Name = "dgvcKeyDisable";
             this.dgvcKeyDisable.ReadOnly = true;
@@ -1740,9 +1768,9 @@
             // 
             // dgvcKeyEnableToggle
             // 
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle15.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.dgvcKeyEnableToggle.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.dgvcKeyEnableToggle.DefaultCellStyle = dataGridViewCellStyle5;
             this.dgvcKeyEnableToggle.HeaderText = "Toggle";
             this.dgvcKeyEnableToggle.Name = "dgvcKeyEnableToggle";
             this.dgvcKeyEnableToggle.ReadOnly = true;
@@ -1750,6 +1778,17 @@
             // 
             // fctbLog
             // 
+            this.fctbLog.AutoCompleteBracketsList = new char[] {
+        '(',
+        ')',
+        '{',
+        '}',
+        '[',
+        ']',
+        '\"',
+        '\"',
+        '\'',
+        '\''};
             this.fctbLog.AutoScrollMinSize = new System.Drawing.Size(25, 15);
             this.fctbLog.BackBrush = null;
             this.fctbLog.CharHeight = 15;
@@ -1763,6 +1802,7 @@
             this.fctbLog.Name = "fctbLog";
             this.fctbLog.Paddings = new System.Windows.Forms.Padding(0);
             this.fctbLog.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.fctbLog.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("fctbLog.ServiceColors")));
             this.fctbLog.Size = new System.Drawing.Size(1013, 184);
             this.fctbLog.TabIndex = 1;
             this.fctbLog.Zoom = 100;
@@ -1809,6 +1849,8 @@
             this.flowLayoutZones.ResumeLayout(false);
             this.gbAudioMode.ResumeLayout(false);
             this.gbAudioMode.PerformLayout();
+            this.tpAVControl.ResumeLayout(false);
+            this.flowLayoutAudioControls.ResumeLayout(false);
             this.tpAdvanced.ResumeLayout(false);
             this.gbDeviceStatus.ResumeLayout(false);
             this.gbDeviceStatus.PerformLayout();
@@ -1984,6 +2026,8 @@
         private System.Windows.Forms.Button btnDisconnect;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblCapabilitiesUnknown;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutAudioControls;
         private System.Windows.Forms.Label label1;
     }
 }

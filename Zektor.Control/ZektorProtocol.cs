@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using SPAA05.Shared.DataSources;
-using SPAA05.Shared.Protocol;
+using Zektor.Shared.DataSources;
+using Zektor.Shared.Protocol;
 
 namespace Zektor.Protocol {
     public class ZektorProtocol : DataProtocol<ZektorCommand> {
