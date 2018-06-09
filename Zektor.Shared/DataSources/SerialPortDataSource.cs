@@ -252,7 +252,7 @@ namespace Zektor.Shared.DataSources {
 
         public override void SaveTo(XmlTextWriter xtr) {
             base.SaveTo(xtr);
-            xtr.WriteElementString("PortName", PortInfo.Name ?? "");
+            xtr.WriteElementString("PortName", PortInfo?.Name ?? "");
             xtr.WriteElementString("Baudrate", BaudRate.ToString(CultureInfo.InvariantCulture));
         }
 

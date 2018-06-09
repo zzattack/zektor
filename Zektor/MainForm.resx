@@ -129,6 +129,16 @@
   <data name="rbAudioModeAutoConvert.ToolTip" xml:space="preserve">
     <value>When enabled, automatic conversion of the analog and digital signals is performed. Volume and Tone controls will affect both the analog and digital out­puts, and the inputs will be automatically selected based on the signals present on the inputs.</value>
   </data>
+  <data name="lblZoneLipSyncDescription.Text" xml:space="preserve">
+    <value>Zone lip synching allows to delay the audio going out of the matrix device for a single zone. 
+This is useful when the receiving end introduces processing delay on the video signal.
+If the same audio input is used in multiple zones, each zone can be delayed separately.</value>
+  </data>
+  <data name="lblInputLipSyncDescription.Text" xml:space="preserve">
+    <value>Input lip synching allows to delay the audio coming into the matrix device to match it up
+with a video source. This is useful when the input device has a sync delay between its audio and video.
+If the same audio input is used in multiple zones, this setting affects each zone.</value>
+  </data>
   <metadata name="dgvcKeyName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

@@ -23,18 +23,21 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.lblZone = new System.Windows.Forms.Label();
             this.ckbBreakaway = new System.Windows.Forms.CheckBox();
             this.cbVideoInput = new System.Windows.Forms.ComboBox();
+            this.bsVideoMap = new System.Windows.Forms.BindingSource(this.components);
             this.cbAnalogAudioInput = new System.Windows.Forms.ComboBox();
+            this.bsAnalogAudioMap = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.lblAnalogAudio = new System.Windows.Forms.Label();
-            this.lblZoneIdx = new System.Windows.Forms.Label();
             this.ckbMuteDigitalAudio = new System.Windows.Forms.CheckBox();
             this.ckbMuteAnalogAudio = new System.Windows.Forms.CheckBox();
             this.ckbMuteVideo = new System.Windows.Forms.CheckBox();
             this.lblDigitalAudio = new System.Windows.Forms.Label();
             this.cbDigitalAudioInput = new System.Windows.Forms.ComboBox();
+            this.bsDigitalAudioMap = new System.Windows.Forms.BindingSource(this.components);
             this.gbIOs = new System.Windows.Forms.GroupBox();
             this.nudDigitalAudioDelay = new System.Windows.Forms.NumericUpDown();
             this.nudAnalogAudioDelay = new System.Windows.Forms.NumericUpDown();
@@ -43,6 +46,10 @@
             this.btnChange = new System.Windows.Forms.Button();
             this.btnRead = new System.Windows.Forms.Button();
             this.lblUnknownAudioMode = new System.Windows.Forms.Label();
+            this.lblZoneName = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.bsVideoMap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsAnalogAudioMap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsDigitalAudioMap)).BeginInit();
             this.gbIOs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDigitalAudioDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudAnalogAudioDelay)).BeginInit();
@@ -53,11 +60,11 @@
             // 
             this.lblZone.AutoSize = true;
             this.lblZone.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblZone.Location = new System.Drawing.Point(8, 0);
+            this.lblZone.Location = new System.Drawing.Point(18, 3);
             this.lblZone.Name = "lblZone";
-            this.lblZone.Size = new System.Drawing.Size(50, 20);
+            this.lblZone.Size = new System.Drawing.Size(19, 20);
             this.lblZone.TabIndex = 0;
-            this.lblZone.Text = "Zone";
+            this.lblZone.Text = "#";
             // 
             // ckbBreakaway
             // 
@@ -68,50 +75,39 @@
             this.ckbBreakaway.Location = new System.Drawing.Point(181, 31);
             this.ckbBreakaway.Name = "ckbBreakaway";
             this.ckbBreakaway.Size = new System.Drawing.Size(100, 17);
-            this.ckbBreakaway.TabIndex = 1;
+            this.ckbBreakaway.TabIndex = 2;
             this.ckbBreakaway.Text = "A/V breakaway";
             this.ckbBreakaway.UseVisualStyleBackColor = true;
             // 
             // cbVideoInput
             // 
+            this.cbVideoInput.DataSource = this.bsVideoMap;
+            this.cbVideoInput.DisplayMember = "Name";
             this.cbVideoInput.FormattingEnabled = true;
-            this.cbVideoInput.Items.AddRange(new object[] {
-            "No input",
-            "Component 1",
-            "Component 2",
-            "Component 3",
-            "Component 4",
-            "Component 5",
-            "Component 6",
-            "Component 7",
-            "Component 8",
-            "Composite 1",
-            "Composite 2",
-            "Composite 3"});
             this.cbVideoInput.Location = new System.Drawing.Point(114, 56);
             this.cbVideoInput.Name = "cbVideoInput";
             this.cbVideoInput.Size = new System.Drawing.Size(121, 21);
-            this.cbVideoInput.TabIndex = 2;
+            this.cbVideoInput.TabIndex = 5;
             this.cbVideoInput.SelectedIndexChanged += new System.EventHandler(this.combobox_SelectedIndexChanged);
+            // 
+            // bsVideoMap
+            // 
+            this.bsVideoMap.DataSource = typeof(Zektor.VideoInputMapEntry);
             // 
             // cbAnalogAudioInput
             // 
+            this.cbAnalogAudioInput.DataSource = this.bsAnalogAudioMap;
+            this.cbAnalogAudioInput.DisplayMember = "Name";
             this.cbAnalogAudioInput.FormattingEnabled = true;
-            this.cbAnalogAudioInput.Items.AddRange(new object[] {
-            "No input",
-            "Input 1",
-            "Input 2",
-            "Input 3",
-            "Input 4",
-            "Input 5",
-            "Input 6",
-            "Input 7",
-            "Input 8"});
             this.cbAnalogAudioInput.Location = new System.Drawing.Point(114, 83);
             this.cbAnalogAudioInput.Name = "cbAnalogAudioInput";
             this.cbAnalogAudioInput.Size = new System.Drawing.Size(121, 21);
-            this.cbAnalogAudioInput.TabIndex = 3;
+            this.cbAnalogAudioInput.TabIndex = 9;
             this.cbAnalogAudioInput.SelectedIndexChanged += new System.EventHandler(this.combobox_SelectedIndexChanged);
+            // 
+            // bsAnalogAudioMap
+            // 
+            this.bsAnalogAudioMap.DataSource = typeof(Zektor.AudioInputMapEntry);
             // 
             // label1
             // 
@@ -128,18 +124,8 @@
             this.lblAnalogAudio.Location = new System.Drawing.Point(13, 86);
             this.lblAnalogAudio.Name = "lblAnalogAudio";
             this.lblAnalogAudio.Size = new System.Drawing.Size(95, 13);
-            this.lblAnalogAudio.TabIndex = 5;
+            this.lblAnalogAudio.TabIndex = 8;
             this.lblAnalogAudio.Text = "Analog audio input";
-            // 
-            // lblZoneIdx
-            // 
-            this.lblZoneIdx.AutoSize = true;
-            this.lblZoneIdx.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblZoneIdx.Location = new System.Drawing.Point(64, 0);
-            this.lblZoneIdx.Name = "lblZoneIdx";
-            this.lblZoneIdx.Size = new System.Drawing.Size(19, 20);
-            this.lblZoneIdx.TabIndex = 10;
-            this.lblZoneIdx.Text = "?";
             // 
             // ckbMuteDigitalAudio
             // 
@@ -147,7 +133,7 @@
             this.ckbMuteDigitalAudio.Location = new System.Drawing.Point(241, 112);
             this.ckbMuteDigitalAudio.Name = "ckbMuteDigitalAudio";
             this.ckbMuteDigitalAudio.Size = new System.Drawing.Size(50, 17);
-            this.ckbMuteDigitalAudio.TabIndex = 26;
+            this.ckbMuteDigitalAudio.TabIndex = 14;
             this.ckbMuteDigitalAudio.Text = "Mute";
             this.ckbMuteDigitalAudio.UseVisualStyleBackColor = true;
             // 
@@ -157,7 +143,7 @@
             this.ckbMuteAnalogAudio.Location = new System.Drawing.Point(241, 86);
             this.ckbMuteAnalogAudio.Name = "ckbMuteAnalogAudio";
             this.ckbMuteAnalogAudio.Size = new System.Drawing.Size(50, 17);
-            this.ckbMuteAnalogAudio.TabIndex = 25;
+            this.ckbMuteAnalogAudio.TabIndex = 10;
             this.ckbMuteAnalogAudio.Text = "Mute";
             this.ckbMuteAnalogAudio.UseVisualStyleBackColor = true;
             // 
@@ -167,7 +153,7 @@
             this.ckbMuteVideo.Location = new System.Drawing.Point(241, 58);
             this.ckbMuteVideo.Name = "ckbMuteVideo";
             this.ckbMuteVideo.Size = new System.Drawing.Size(50, 17);
-            this.ckbMuteVideo.TabIndex = 24;
+            this.ckbMuteVideo.TabIndex = 6;
             this.ckbMuteVideo.Text = "Mute";
             this.ckbMuteVideo.UseVisualStyleBackColor = true;
             // 
@@ -177,27 +163,23 @@
             this.lblDigitalAudio.Location = new System.Drawing.Point(13, 113);
             this.lblDigitalAudio.Name = "lblDigitalAudio";
             this.lblDigitalAudio.Size = new System.Drawing.Size(91, 13);
-            this.lblDigitalAudio.TabIndex = 26;
+            this.lblDigitalAudio.TabIndex = 12;
             this.lblDigitalAudio.Text = "Digital audio input";
             // 
             // cbDigitalAudioInput
             // 
+            this.cbDigitalAudioInput.DataSource = this.bsDigitalAudioMap;
+            this.cbDigitalAudioInput.DisplayMember = "Name";
             this.cbDigitalAudioInput.FormattingEnabled = true;
-            this.cbDigitalAudioInput.Items.AddRange(new object[] {
-            "No input",
-            "Input 1",
-            "Input 2",
-            "Input 3",
-            "Input 4",
-            "Input 5",
-            "Input 6",
-            "Input 7",
-            "Input 8"});
             this.cbDigitalAudioInput.Location = new System.Drawing.Point(114, 110);
             this.cbDigitalAudioInput.Name = "cbDigitalAudioInput";
             this.cbDigitalAudioInput.Size = new System.Drawing.Size(121, 21);
-            this.cbDigitalAudioInput.TabIndex = 25;
+            this.cbDigitalAudioInput.TabIndex = 13;
             this.cbDigitalAudioInput.SelectedIndexChanged += new System.EventHandler(this.combobox_SelectedIndexChanged);
+            // 
+            // bsDigitalAudioMap
+            // 
+            this.bsDigitalAudioMap.DataSource = typeof(Zektor.AudioInputMapEntry);
             // 
             // gbIOs
             // 
@@ -221,7 +203,7 @@
             this.gbIOs.Location = new System.Drawing.Point(6, 26);
             this.gbIOs.Name = "gbIOs";
             this.gbIOs.Size = new System.Drawing.Size(364, 145);
-            this.gbIOs.TabIndex = 27;
+            this.gbIOs.TabIndex = 2;
             this.gbIOs.TabStop = false;
             this.gbIOs.Text = "I/O selection";
             this.gbIOs.Visible = false;
@@ -236,7 +218,7 @@
             0});
             this.nudDigitalAudioDelay.Name = "nudDigitalAudioDelay";
             this.nudDigitalAudioDelay.Size = new System.Drawing.Size(60, 20);
-            this.nudDigitalAudioDelay.TabIndex = 33;
+            this.nudDigitalAudioDelay.TabIndex = 15;
             this.nudDigitalAudioDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // nudAnalogAudioDelay
@@ -249,7 +231,7 @@
             0});
             this.nudAnalogAudioDelay.Name = "nudAnalogAudioDelay";
             this.nudAnalogAudioDelay.Size = new System.Drawing.Size(60, 20);
-            this.nudAnalogAudioDelay.TabIndex = 32;
+            this.nudAnalogAudioDelay.TabIndex = 11;
             this.nudAnalogAudioDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // nudVideoDelay
@@ -262,7 +244,7 @@
             0});
             this.nudVideoDelay.Name = "nudVideoDelay";
             this.nudVideoDelay.Size = new System.Drawing.Size(60, 20);
-            this.nudVideoDelay.TabIndex = 31;
+            this.nudVideoDelay.TabIndex = 7;
             this.nudVideoDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblSwitchDelay
@@ -271,7 +253,7 @@
             this.lblSwitchDelay.Location = new System.Drawing.Point(291, 27);
             this.lblSwitchDelay.Name = "lblSwitchDelay";
             this.lblSwitchDelay.Size = new System.Drawing.Size(69, 26);
-            this.lblSwitchDelay.TabIndex = 29;
+            this.lblSwitchDelay.TabIndex = 3;
             this.lblSwitchDelay.Text = "Switch delay\r\n(milliseconds)";
             // 
             // btnChange
@@ -279,7 +261,7 @@
             this.btnChange.Location = new System.Drawing.Point(97, 27);
             this.btnChange.Name = "btnChange";
             this.btnChange.Size = new System.Drawing.Size(75, 23);
-            this.btnChange.TabIndex = 28;
+            this.btnChange.TabIndex = 1;
             this.btnChange.Text = "Change";
             this.btnChange.UseVisualStyleBackColor = true;
             this.btnChange.Click += new System.EventHandler(this.btnChange_Click);
@@ -289,7 +271,7 @@
             this.btnRead.Location = new System.Drawing.Point(16, 27);
             this.btnRead.Name = "btnRead";
             this.btnRead.Size = new System.Drawing.Size(75, 23);
-            this.btnRead.TabIndex = 27;
+            this.btnRead.TabIndex = 0;
             this.btnRead.Text = "Read";
             this.btnRead.UseVisualStyleBackColor = true;
             this.btnRead.Click += new System.EventHandler(this.btnRead_Click);
@@ -305,16 +287,29 @@
             this.lblUnknownAudioMode.Text = "Unknown audio mode\r\nRead extended settings";
             this.lblUnknownAudioMode.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // lblZoneName
+            // 
+            this.lblZoneName.AutoSize = true;
+            this.lblZoneName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZoneName.Location = new System.Drawing.Point(56, 3);
+            this.lblZoneName.Name = "lblZoneName";
+            this.lblZoneName.Size = new System.Drawing.Size(50, 20);
+            this.lblZoneName.TabIndex = 1;
+            this.lblZoneName.Text = "Zone";
+            // 
             // ZoneMapControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lblZoneIdx);
+            this.Controls.Add(this.lblZoneName);
             this.Controls.Add(this.lblZone);
             this.Controls.Add(this.gbIOs);
             this.Controls.Add(this.lblUnknownAudioMode);
             this.Name = "ZoneMapControl";
             this.Size = new System.Drawing.Size(375, 174);
+            ((System.ComponentModel.ISupportInitialize)(this.bsVideoMap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsAnalogAudioMap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsDigitalAudioMap)).EndInit();
             this.gbIOs.ResumeLayout(false);
             this.gbIOs.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDigitalAudioDelay)).EndInit();
@@ -333,7 +328,6 @@
         private System.Windows.Forms.ComboBox cbAnalogAudioInput;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblAnalogAudio;
-        private System.Windows.Forms.Label lblZoneIdx;
         private System.Windows.Forms.CheckBox ckbMuteDigitalAudio;
         private System.Windows.Forms.CheckBox ckbMuteAnalogAudio;
         private System.Windows.Forms.CheckBox ckbMuteVideo;
@@ -347,5 +341,9 @@
         private System.Windows.Forms.NumericUpDown nudAnalogAudioDelay;
         private System.Windows.Forms.NumericUpDown nudVideoDelay;
         private System.Windows.Forms.Label lblSwitchDelay;
+        private System.Windows.Forms.BindingSource bsVideoMap;
+        private System.Windows.Forms.BindingSource bsAnalogAudioMap;
+        private System.Windows.Forms.BindingSource bsDigitalAudioMap;
+        private System.Windows.Forms.Label lblZoneName;
     }
 }

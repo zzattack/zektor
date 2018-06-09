@@ -64,7 +64,7 @@ namespace Zektor.Shared.Protocol {
         }
     }
 
-    public interface IDataProtocol<T> where T : IDataLine {
+    public interface IDataProtocol<in T> where T : IDataLine {
         void Attach(DataSource dataSource);
         void Detach();
         event EventHandler<DataReceivedEventArgs> BogusReceived;
@@ -75,7 +75,7 @@ namespace Zektor.Shared.Protocol {
     }
 
     public abstract class DataProtocol<T> : IDataProtocol<IDataLine>, IDisposable where T : DataLine {
-        protected readonly List<byte> _buffer = new List<byte>();
+        protected readonly List<byte> Buffer = new List<byte>();
 
         // signals the protocol that the NEXT line can only complete once completiontest finishes
         private volatile Func<List<byte>, bool> _completionTest;
@@ -113,8 +113,8 @@ namespace Zektor.Shared.Protocol {
         /// </summary>
         /// <returns></returns>
         protected virtual void Dispatch() {
-            if (Dispatch(_buffer))
-                _buffer.Clear();
+            if (Dispatch(Buffer))
+                Buffer.Clear();
         }
 
         /// <summary>
@@ -141,8 +141,8 @@ namespace Zektor.Shared.Protocol {
         ///     Forces an attempt to parse the internal buffer as Tline
         /// </summary>
         internal void ForceDispatch() {
-            Dispatch(_buffer);
-            _buffer.Clear();
+            Dispatch(Buffer);
+            Buffer.Clear();
         }
 
         protected void ForwardToBufferHandler(object sender, DataReceivedEventArgs e) {
@@ -218,7 +218,7 @@ namespace Zektor.Shared.Protocol {
         #region bogus handling for crazy hacks, i.e. receiving a "FF FF FF" response from receiver FF FF in RPD proto
 
         public void ClearBogus() {
-            _buffer.Clear();
+            Buffer.Clear();
         }
 
         private bool _bogusOnly;

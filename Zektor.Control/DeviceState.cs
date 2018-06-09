@@ -24,6 +24,8 @@ namespace Zektor.Protocol {
         private CapabilitiesInfo _capabilities;
         private PowerState? _powerState;
         private int? _masterVolume;
+        private int? _audioDelay;
+
 
         public DeviceState() {
             foreach (var key in KeyEmulation.KeyDefinitions)
@@ -110,6 +112,14 @@ namespace Zektor.Protocol {
                 OnPropertyChanged();
             }
         }
+        public int? AudioDelay {
+            get => _audioDelay;
+            set {
+                if (value == _audioDelay) return;
+                _audioDelay = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         public void Update(ZektorCommand cmd) {
@@ -154,7 +164,7 @@ namespace Zektor.Protocol {
                 if (Inputs.Count != Capabilities.NumInputs) {
                     Inputs.Clear();
                     for (int i = 0; i < Capabilities.NumInputs; i++)
-                        Inputs.Add(new InputState(i));
+                        Inputs.Add(new InputState(i + 1));
                 }
             }
             else if (cmd is LedIntensities li && li.IsQueryResponse) {
@@ -179,6 +189,13 @@ namespace Zektor.Protocol {
                     Zones[zone].Update(cmd);
                 }
             }
+
+            // delegate input-specific commands to affected zones
+            if (cmd is IMultiInputCommand mic) {
+                foreach (int input in mic.AffectedInputs) {
+                    Inputs[input].Update(cmd);
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -193,26 +210,7 @@ namespace Zektor.Protocol {
             KeyStateChanged?.Invoke(this, e);
         }
     }
-
-    public class InputState : INotifyPropertyChanged {
-        public InputState(int idx) {
-            Index = idx;
-        }
-
-        public int Index { get; private set; } // Zero-based index. So 'Zone 1' is stored at idx 0.
-
-        public void Update(ZektorCommand cmd) {
-
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
+    
     public class VersionState {
         public string Model;
         public string FirmwareVersion;

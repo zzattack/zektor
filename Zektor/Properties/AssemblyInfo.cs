@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Zektor")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Zektor Serial Controller")]
+[assembly: AssemblyDescription("Control program for Zektor Matrix switch device.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Zektor")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Frank Razenberg")]
+[assembly: AssemblyProduct("Zektor Serial Controller")]
+[assembly: AssemblyCopyright("Copyright Frank Razenberg ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

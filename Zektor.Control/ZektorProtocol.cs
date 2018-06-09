@@ -15,22 +15,22 @@ namespace Zektor.Protocol {
         protected override void AddToBuffer(DataSource o, DataReceivedEventArgs e) {
             foreach (byte b in e.Data) {
                 if (b == STX) {
-                    if (_buffer.Any())
-                        OnBogusReceived(_buffer);
+                    if (Buffer.Any())
+                        OnBogusReceived(Buffer);
 
-                    _buffer.Clear();
+                    Buffer.Clear();
                     _lineReceiving = true;
                 }
                 else {
                     if (_lineReceiving && b == ETX) {
-                        if (!Dispatch(_buffer))
-                            OnBogusReceived(_buffer);
+                        if (!Dispatch(Buffer))
+                            OnBogusReceived(Buffer);
                         
                         _lineReceiving = false;
-                        _buffer.Clear();
+                        Buffer.Clear();
                     }
                     else {
-                        _buffer.Add(b);
+                        Buffer.Add(b);
                     }
                 }
 

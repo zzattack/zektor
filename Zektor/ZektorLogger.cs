@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using FastColoredTextBoxNS;
 using Zektor.Protocol;
 
 namespace Zektor {
     public class ZektorLogger : GenericColorLogger<ZektorCommand> {
+        public ZektorLogger() {
+            ShowTooltips = true;
+        }
 
         public override void LogColor(ZektorCommand line, bool isIncoming) {
             if (Window == null || Window.IsDisposed || !Window.IsHandleCreated)
@@ -15,7 +19,6 @@ namespace Zektor {
                 Window.BeginInvoke((Action<ZektorCommand, bool>)LogColor, line, isIncoming);
                 return;
             }
-            Window.BeginUpdate();
 
             if (Window.LinesCount > MaxLineCount)
                 Window.Clear();
@@ -27,20 +30,35 @@ namespace Zektor {
 
             for (int idx = 0; idx < lineBytes.Count; idx++) {
                 if (nextState != LineState.None) currentState = nextState;
+                nextState = LineState.None;
                 byte b = lineBytes[idx];
 
-                if (currentState == LineState.STX) {
+                if (b == '^') {
+                    currentState = LineState.STX;
                     nextState = LineState.Command;
                 }
-                else if (currentState == LineState.Command) {
-                    if (b == ' ') nextState = LineState.Param;
+                else if (b == ':') {
+                    currentState = LineState.Separator;
+                    nextState = LineState.Checksum;
                 }
-                else if (currentState == LineState.Param) {
+                else if (b == '$') {
+                    currentState = LineState.ETX;
+                }
+                else if (b == '@') {
+                    currentState = LineState.Zone;
+                }
+                else if (currentState == LineState.Command || currentState == LineState.Channel) {
+                    if (b == ' ') nextState = LineState.Param;
+                    else if (b == '.') {
+                        currentState = LineState.Channel;
+                    }
+                }
+                else if (currentState == LineState.Param || currentState == LineState.Zone) {
                     if (b == ',') {
                         currentState = LineState.Separator;
                         nextState = LineState.Param;
                     }
-                    else if (b == '%' || b == '@') {
+                    else if (b == '%') {
                         currentState = LineState.Prefix;
                         nextState = LineState.Param;
                     }
@@ -48,24 +66,22 @@ namespace Zektor {
                         currentState = LineState.Query;
                     }
                 }
-                else if (b == ':') {
-                    currentState = LineState.Separator;
-                    nextState = LineState.Checksum;
-                }
-                if (b == '$') {
-                    currentState = LineState.ETX;
-                }
-                LogRaw(new string((char)b, 1), _styles[currentState]);
+                
+                LogRaw(new string((char)b, 1), Styles[currentState]);
             }
-
-            Window.EndUpdate();
         }
 
+        public override string GetStyleTooltip(Style ts) {
+            return Styles.Select(e => (KeyValuePair<LineState, TextStyle>?)e)
+                .FirstOrDefault(kvp => kvp.Value.Value.Equals(ts))?.Key.ToString();
+        }
 
         enum LineState {
             STX,
             Command,
+            Channel,
             Param,
+            Zone,
             Prefix,
             Separator,
             Query,
@@ -74,15 +90,17 @@ namespace Zektor {
             None
         }
 
-        private static readonly Dictionary<LineState, TextStyle> _styles = new Dictionary<LineState, TextStyle> {
+        private static readonly Dictionary<LineState, TextStyle> Styles = new Dictionary<LineState, TextStyle> {
             {LineState.STX, new TextStyle(Brushes.DarkBlue, null, FontStyle.Regular)},
             {LineState.Command, new TextStyle(Brushes.BlueViolet, null, FontStyle.Regular)},
-            {LineState.Param, new TextStyle(Brushes.Red, null, FontStyle.Regular)},
-            {LineState.Prefix, new TextStyle(Brushes.Orange, null, FontStyle.Regular)},
+            {LineState.Channel, new TextStyle(Brushes.Coral, null, FontStyle.Regular)},
+            {LineState.Param, new TextStyle(Brushes.Orange, null, FontStyle.Regular)},
+            {LineState.Zone, new TextStyle(Brushes.Red, null, FontStyle.Regular)},
+            {LineState.Prefix, new TextStyle(Brushes.Green, null, FontStyle.Regular)},
             {LineState.Separator, new TextStyle(Brushes.Brown, null, FontStyle.Regular)},
             {LineState.Query, new TextStyle(Brushes.CornflowerBlue, null, FontStyle.Regular)},
             {LineState.Checksum, new TextStyle(Brushes.IndianRed, null, FontStyle.Regular)},
-            {LineState.ETX, new TextStyle(Brushes.Green, null, FontStyle.Regular)},
+            {LineState.ETX, new TextStyle(Brushes.DarkOliveGreen, null, FontStyle.Regular)},
         };
     }
 }

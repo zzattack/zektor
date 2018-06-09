@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 using Zektor.Protocol;
 using Zektor.Protocol.Audio;
@@ -8,18 +9,22 @@ using Zektor.Protocol.Audio;
 namespace Zektor {
     public partial class AudioSettingsControl : UserControl {
         private readonly ZoneState _zs;
-        private readonly DeviceState _ds;
 
         private AudioSettingsControl() {
             InitializeComponent();
             cbStereoMixdownMode.DataSource = Enum.GetValues(typeof(StereoMixDownMode));
             cbDigitalRouteOption.DataSource = Enum.GetValues(typeof(DigitalRouteOption));
+            this.HandleCreated += OnHandleCreated; 
         }
-        public AudioSettingsControl(ZoneState zs, DeviceState ds) : this() {
+
+        public AudioSettingsControl(ZoneState zs) : this() {
             _zs = zs;
-            _ds = ds;
             zs.PropertyChanged += OnZonePropertyChanged;
-            lblZoneIdx.Text = zs.Index.ToString();
+            lblZone.Text = $"#{zs.Index} -";
+            lblZoneName.DataBindings.Add("Text", ConfigManager.NameMapping.ZoneNames.First(z => z.Key == _zs.Index), "Name");
+            UpdateUI();
+        }
+        private void OnHandleCreated(object sender, EventArgs e) {
             UpdateUI();
         }
 
@@ -68,7 +73,6 @@ namespace Zektor {
                     cbDigitalRouteOption.SelectedIndex = -1;
             }
         }
-
 
         private void UpdateVolumeLabel(int? val) {
             if (!val.HasValue) {
@@ -119,6 +123,7 @@ namespace Zektor {
         }
 
         private void UpdateUI() {
+            if (!IsHandleCreated || IsDisposed) return;
             if (InvokeRequired) {
                 BeginInvoke((Action)UpdateUI);
                 return;
@@ -141,12 +146,22 @@ namespace Zektor {
             RequestLineTransmit?.Invoke(this, e);
         }
 
+        private void btnFlatten_Click(object sender, EventArgs e) {
+            _zs.ResetEqualizerControls();
+            var zoneList = new HashSet<int> { _zs.Index };
+            var reqs = new ZektorCommand[] {
+                new Eq1z { Zones = { (zoneList, new LevelAdjustment(128, VolumeAdjust.Absolute)) } },
+                new Eq2z { Zones = { (zoneList, new LevelAdjustment(128, VolumeAdjust.Absolute)) } },
+                new Eq3z { Zones = { (zoneList, new LevelAdjustment(128, VolumeAdjust.Absolute)) } },
+                new Eq4z { Zones = { (zoneList, new LevelAdjustment(128, VolumeAdjust.Absolute)) } },
+                new Eq5z { Zones = { (zoneList, new LevelAdjustment(128, VolumeAdjust.Absolute)) } },
+            };
+            OnRequestLineTransmit(new RequestLinesTransmitArgs(reqs));
+        }
+
         private void btnReadAll_Click(object sender, EventArgs e) {
             _zs.ResetZoneAudioControls();
-            Refresh();
-
             var zoneList = new HashSet<int> { _zs.Index };
-
             var reqs = new ZektorCommand[] {
                 new ZoneVolumeAdjust { IsQueryRequest = true, Zones = { (zoneList, null) }, },
                 new BassLevelAdjust { IsQueryRequest = true, Zones = { (zoneList, null) }, },
@@ -159,7 +174,6 @@ namespace Zektor {
                 new MixDownStereo { IsQueryRequest = true, Zones = { (zoneList, null) }, },
                 new DigitalRoute { IsQueryRequest = true, Zones = { (zoneList, null) }, },
             };
-
             OnRequestLineTransmit(new RequestLinesTransmitArgs(reqs));
         }
 
@@ -179,6 +193,7 @@ namespace Zektor {
             };
             OnRequestLineTransmit(new RequestLinesTransmitArgs(reqs));
         }
+
 
     }
 }

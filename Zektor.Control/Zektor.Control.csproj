@@ -53,10 +53,12 @@
     <Compile Include="Audio\LipSyncInputDelay.cs" />
     <Compile Include="Audio\LipSyncZoneDelay.cs" />
     <Compile Include="Audio\MixDownStereo.cs" />
+    <Compile Include="Audio\MultiInputCommand.cs" />
     <Compile Include="Audio\VolumeToneStepSize.cs" />
     <Compile Include="Audio\LevelAdjust.cs" />
     <Compile Include="Basic\DelaySwitchZones.cs" />
     <Compile Include="DeviceState.cs" />
+    <Compile Include="InputState.cs" />
     <Compile Include="MultiZoneCommand.cs" />
     <Compile Include="Basic\QueryStatus.cs" />
     <Compile Include="Enums.cs" />

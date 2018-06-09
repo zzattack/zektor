@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 using Zektor.Protocol;
 using Zektor.Protocol.Basic;
@@ -12,6 +13,10 @@ namespace Zektor {
 
         private ZoneMapControl() {
             InitializeComponent();
+            this.HandleCreated += OnHandleCreated;
+            bsVideoMap.DataSource = ConfigManager.NameMapping.VideoInputNames;
+            bsAnalogAudioMap.DataSource = ConfigManager.NameMapping.AudioInputNames;
+            bsDigitalAudioMap.DataSource = ConfigManager.NameMapping.AudioInputNames;
         }
 
         public ZoneMapControl(ZoneState zs, DeviceState ds) : this() {
@@ -19,7 +24,11 @@ namespace Zektor {
             _ds = ds;
             zs.PropertyChanged += OnZonePropertyChanged;
             ds.PropertyChanged += OnDevicePropertyChanged;
-            lblZoneIdx.Text = zs.Index.ToString();
+            lblZone.Text = $"#{zs.Index} -";
+            lblZoneName.DataBindings.Add("Text", ConfigManager.NameMapping.ZoneNames.First(z => z.Key == _zs.Index), "Name");
+        }
+
+        private void OnHandleCreated(object sender, EventArgs e) {
             UpdateUI();
         }
 
@@ -29,6 +38,7 @@ namespace Zektor {
         }
 
         private void UpdateUI() {
+            if (!IsHandleCreated || IsDisposed) return;
             if (InvokeRequired) {
                 BeginInvoke((Action)UpdateUI);
                 return;
@@ -123,10 +133,7 @@ namespace Zektor {
 
         private void btnRead_Click(object sender, EventArgs e) {
             _zs.ResetZoneInputs();
-            Refresh();
-
             var zoneList = new HashSet<int> { _zs.Index };
-
             var reqs = new ZektorCommand[] {
                 new SetZone { IsQueryRequest = true, Zones = { (zoneList, null) }, },
                 new MuteZone { IsQueryRequest = true, Zones = { (zoneList, null) }, },

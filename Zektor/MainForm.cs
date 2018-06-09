@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Zektor.Protocol;
 using Zektor.Protocol.Advanced;
@@ -16,7 +15,7 @@ using PowerState = Zektor.Protocol.PowerState;
 
 namespace Zektor {
     public partial class MainForm : Form {
-        private DataSource _ds = new TcpClientDataSource("10.31.45.57", 50005);
+        private DataSource _ds;
         private readonly ZektorProtocol _proto = new ZektorProtocol();
         private readonly GenericColorLogger<ZektorCommand> _logger = new ZektorLogger();
         private readonly DeviceState _deviceState = new DeviceState();
@@ -31,7 +30,6 @@ namespace Zektor {
             _logger.ForceASCII = true;
 
             // hook events
-            SetupDataSource();
             _proto.LineReceived += (sender, args) => _deviceState.Update(args.Line);
             _proto.DeviceState = _deviceState;
             _deviceState.PropertyChanged += OnDeviceStateChanged;
@@ -72,7 +70,27 @@ namespace Zektor {
             }
 
             cbLightingMode.DataSource = Enum.GetValues(typeof(LightingMode));
+
+            ConfigManager.Load();
+            Size = ConfigManager.WindowSize;
+            tsmiAfterConnect.Checked = ConfigManager.ReadConfigAfterConnect;
+            SetupDataSource(ConfigManager.DataSource);
+            if (ConfigManager.LogPanelExpanded)
+                btnShowLogger_Click(null, null);
+            else
+                btnHideLogger_Click(null, null);
+
+            UpdateUI();
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+            _ds?.Stop();
+            ConfigManager.WindowSize = Size;
+            ConfigManager.DataSource = _ds;
+            ConfigManager.Save();
+        }
+
+        #region UI/state synching
 
         private void OnDeviceStateChanged(object sender, PropertyChangedEventArgs e) {
             if (InvokeRequired) {
@@ -133,16 +151,23 @@ namespace Zektor {
                     }
                 }
 
-                /* TODO
                 // create necessary zone and input controls if they don't exist yet
-                if (flowLayoutInputs.Controls.Count != _deviceState.Capabilities.NumInputs) {
-                    flowLayoutInputs.Controls.Clear();
+                if (flowLayoutLipSyncInputs.Controls.Count != _deviceState.Capabilities.NumInputs) {
+                    flowLayoutLipSyncInputs.Controls.Clear();
                     for (int i = 0; i < _deviceState.Capabilities.NumInputs; i++) {
-                        var ins = _deviceState.GetInputState(i);
-                        var ic = new InputControls(ins);
-                        flowLayoutInputs.Controls.Add(ic);
+                        var zs = _deviceState.Zones[i];
+                        var lsz = NewLipSyncZoneControl(zs);
+                        flowLayoutLipSyncZones.Controls.Add(lsz);
                     }
-                }*/
+                }
+                if (flowLayoutLipSyncInputs.Controls.Count != _deviceState.Capabilities.NumInputs) {
+                    flowLayoutLipSyncInputs.Controls.Clear();
+                    for (int i = 0; i < _deviceState.Capabilities.NumInputs; i++) {
+                        var ist = _deviceState.Inputs[i];
+                        var lsi = NewLipSyncInputControl(ist);
+                        flowLayoutLipSyncInputs.Controls.Add(lsi);
+                    }
+                }
             }
 
             else if (e.PropertyName == nameof(DeviceState.Lighting)) {
@@ -190,64 +215,70 @@ namespace Zektor {
         }
 
         private AudioSettingsControl NewZoneAudioControl(ZoneState zs) {
-            var ac = new AudioSettingsControl(zs, _deviceState);
+            var ac = new AudioSettingsControl(zs);
             ac.RequestLineTransmit += (sender, args) => args.Commands.ForEach(c => _proto.Write(c));
             return ac;
         }
 
+        private LipSyncInputControl NewLipSyncInputControl(InputState ist) {
+            var lsi = new LipSyncInputControl(ist);
+            lsi.RequestLineTransmit += (sender, args) => args.Commands.ForEach(c => _proto.Write(c));
+            return lsi;
+        }
+
+        private Control NewLipSyncZoneControl(ZoneState zs) {
+            var lsi = new LipSyncZoneControl(zs);
+            lsi.RequestLineTransmit += (sender, args) => args.Commands.ForEach(c => _proto.Write(c));
+            return lsi;
+        }
+        #endregion
+
         #region Connection events
         private void OnConnect(object sender, EventArgs e) {
+            if (InvokeRequired) {
+                BeginInvoke((EventHandler)OnConnect, sender, e);
+                return;
+            }
+
             _logger.LogText("Connected to Zektor", LogMsgType.Success);
             lblConnectionStateVal.ForeColor = Color.Green;
             lblConnectionStateVal.Text = "yes";
-
-            Task.Run(() => {
-                // knowing capabilities and extended settings first is useful
-                _proto.Write(new QueryCapabilityInfo { IsQueryRequest = true });
-                _proto.Write(new ControlSettings { IsQueryRequest = true });
-
-                // next we can query whatever else we want to know
-                _proto.Write(new PowerControl { IsQueryRequest = true });
-
-                var allZones = new HashSet<int>(new Range(1, 8).Flatten());
-                _proto.Write(new SetZone { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new MuteZone { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new DelaySwitchZones { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new MasterVolume { IsQueryRequest = true, });
-                _proto.Write(new ZoneVolumeAdjust { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new BassLevelAdjust { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new TrebleLevelAdjust { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new Eq1z { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new Eq2z { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new Eq3z { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new Eq4z { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new Eq5z { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new MixDownStereo { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new DigitalRoute { IsQueryRequest = true, Zones = { (allZones, null) }, });
-                _proto.Write(new FirmwareInfo { IsQueryRequest = true });
-                _proto.Write(new RecentError { });
-                _proto.Write(new TransmitEnable { IsQueryRequest = true });
-                _proto.Write(new LedIntensities { IsQueryRequest = true });
-                _proto.Write(new IpAddressInfo { IsQueryRequest = true });
-            });
+            UpdateUI();
+            if (ConfigManager.ReadConfigAfterConnect)
+                ReadAllConfigSettings();
         }
 
         private void OnDisconnect(object sender, ConnectionLostArgs e) {
+            if (InvokeRequired) {
+                BeginInvoke((EventHandler<ConnectionLostArgs>)OnDisconnect, sender, e);
+                return;
+            }
             _logger.LogText("Connection to Zektor lost", LogMsgType.Error);
             lblConnectionStateVal.ForeColor = Color.Red;
             lblConnectionStateVal.Text = "no";
+            UpdateUI();
         }
 
         private void OnConnecting(object sender, EventArgs e) {
+            if (InvokeRequired) {
+                BeginInvoke((EventHandler)OnConnecting, sender, e);
+                return;
+            }
             _logger.LogText("Connecting...", LogMsgType.Info);
             lblConnectionStateVal.ForeColor = Color.Orange;
             lblConnectionStateVal.Text = "busy";
+            UpdateUI();
         }
 
         private void OnConnectFailed(object sender, ConnectingFailedArgs e) {
+            if (InvokeRequired) {
+                BeginInvoke((EventHandler<ConnectingFailedArgs>)OnConnectFailed, sender, e);
+                return;
+            }
             _logger.LogText("Connection failed, retrying in 2s", LogMsgType.Error);
-            lblConnectionStateVal.ForeColor = Color.Black;
+            lblConnectionStateVal.ForeColor = Color.Red;
             lblConnectionStateVal.Text = "no";
+            UpdateUI();
         }
         #endregion
 
@@ -263,15 +294,18 @@ namespace Zektor {
 
         private void btnSetup_Click(object sender, EventArgs e) {
             using (var form = new ConnectionSetupForm(_ds)) {
-                if (form.ShowDialog() == DialogResult.OK) {
-                    _ds = form.DataSource;
+                if (form.ShowDialog(this) == DialogResult.OK) {
+                    if (_ds != null && _ds != form.DataSource)
+                        _ds.Dispose();
+                    SetupDataSource(form.DataSource);
                 }
             }
         }
-        private void SetupDataSource() {
+        private void SetupDataSource(DataSource ds) {
+            if (ds == null || ds == _ds) return;
+            _ds = ds;
             // setup datasource
             _ds.ReconnectBehavior = ReconnectBehavior.ReconnectAlways;
-            _ds.AlwaysFireConnectionFailed = true;
             _ds.AlwaysFireConnectionPending = true;
             _ds.ConnectionEstablished += OnConnect;
             _ds.ConnectingFailed += OnConnectFailed;
@@ -327,6 +361,85 @@ namespace Zektor {
                 XS = ExtendedSettings.AUT,
                 EnableXS = rbAudioModeAutoConvert.Checked ? BitState.Enable : BitState.Disable
             });
+        }
+        private void tsmiCustomZoneNames_Click(object sender, EventArgs e) {
+            (new NameMappingForm()).ShowDialog(this);
+        }
+
+        private void tsmiReadFullConfig_Click(object sender, EventArgs e) {
+            ReadAllConfigSettings();
+        }
+        private void tsmiAfterConnect_Click(object sender, EventArgs e) {
+            ConfigManager.ReadConfigAfterConnect = !ConfigManager.ReadConfigAfterConnect;
+            tsmiAfterConnect.Checked = ConfigManager.ReadConfigAfterConnect;
+        }
+        private void tsmiAbout_Click(object sender, EventArgs e) {
+            (new AboutBox()).ShowDialog(this);
+        }
+
+        private void ReadAllConfigSettings() {
+            var allZones = new HashSet<int>(new Range(1, 8).Flatten());
+            var allInputs = new HashSet<int>(new Range(1, 8).Flatten());
+
+            var commands = new ZektorCommand[] {
+                // knowing capabilities and extended settings first is useful
+                new QueryCapabilityInfo {IsQueryRequest = true},
+                new ControlSettings { IsQueryRequest = true },
+                // next we can query whatever else we want to know
+                new PowerControl { IsQueryRequest = true },
+                new SetZone { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new MuteZone { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new DelaySwitchZones { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new MasterVolume { IsQueryRequest = true, },
+                new ZoneVolumeAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new BassLevelAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new TrebleLevelAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new Eq1z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new Eq2z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new Eq3z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new Eq4z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new Eq5z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new MixDownStereo { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new DigitalRoute { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new LipSyncZoneDelay { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                new LipSyncInputDelay { IsQueryRequest = true, Inputs =  { (allInputs, null) }, },
+                new FirmwareInfo { IsQueryRequest = true },
+                new RecentError { },
+                new TransmitEnable { IsQueryRequest = true },
+                new LedIntensities { IsQueryRequest = true },
+                new IpAddressInfo { IsQueryRequest = true },
+            };
+
+            var progressDialog = new ProgressDialog();
+            progressDialog.Show(this);
+            int idx = 0;
+            foreach (var cmd in commands) {
+                fctbLog.BeginUpdate();
+                _proto.Write(cmd);
+                progressDialog.Progress = (int)(100.0 * idx / commands.Length);
+                // little dirty but gives a much better feel of progress
+                Application.DoEvents();
+                idx++;
+            }
+
+            progressDialog.Close();
+        }
+
+        private void btnShowLogger_Click(object sender, EventArgs e) {
+            split.Panel2Collapsed = false;
+            btnShowLogger.Visible = false;
+            btnHideLogger.Visible = true;
+            ConfigManager.LogPanelExpanded = true;
+        }
+
+        private void btnHideLogger_Click(object sender, EventArgs e) {
+            split.Panel2Collapsed = true;
+            btnHideLogger.Visible = false;
+            btnShowLogger.Visible = true;
+            ConfigManager.LogPanelExpanded = false;
+        }
+        private void tsmiExit_Click(object sender, EventArgs e) {
+            Close();
         }
         #endregion
 
@@ -475,6 +588,49 @@ namespace Zektor {
         }
 
         #endregion
+
+        private void UpdateUI() {
+            if (!IsHandleCreated || IsDisposed) return;
+            if (InvokeRequired) {
+                BeginInvoke((Action)UpdateUI);
+                return;
+            }
+
+            if (_ds == null || _ds.State != ConnectionState.Connected) {
+                btnConnect.Enabled = true;
+                btnDisconnect.Enabled = false;
+                // all disabled
+                btnPowerOn.Enabled = btnPowerOff.Enabled = btnPowerToggle.Enabled = false;
+                gbMasterVolume.Enabled = false;
+                gbAudioMode.Enabled = false;
+                gbZones.Enabled = false;
+                flowLayoutZones.Enabled = false;
+                flowLayoutAudioControls.Enabled = false;
+                gbDeviceStatus.Enabled = false;
+                gbFrontPanelLeds.Enabled = false;
+                gbAdvancedControls.Enabled = false;
+                pnlKeyControlBottom.Enabled = false;
+                pnlKeyControlTop.Enabled = false;
+                tsmiReadNow.Enabled = false;
+            }
+            else {
+                btnConnect.Enabled = false;
+                btnDisconnect.Enabled = true;
+                // everything enabled
+                btnPowerOn.Enabled = btnPowerOff.Enabled = btnPowerToggle.Enabled = true;
+                gbMasterVolume.Enabled = true;
+                gbAudioMode.Enabled = true;
+                gbZones.Enabled = true;
+                flowLayoutZones.Enabled = true;
+                flowLayoutAudioControls.Enabled = true;
+                gbDeviceStatus.Enabled = true;
+                gbFrontPanelLeds.Enabled = true;
+                gbAdvancedControls.Enabled = true;
+                pnlKeyControlBottom.Enabled = true;
+                pnlKeyControlTop.Enabled = true;
+                tsmiReadNow.Enabled = true;
+            }
+        }
 
     }
 }

@@ -28,6 +28,7 @@ namespace Zektor.Protocol {
         private int? _eqBand5;
         private StereoMixDownMode? _stereoMixdown;
         private DigitalRouteOption? _digitalRoute;
+        private int? _lipSyncDelay;
 
         public ZoneState(int zoneIndex) {
             this.Index = zoneIndex;
@@ -206,6 +207,14 @@ namespace Zektor.Protocol {
             }
         }
 
+        public int? LipSyncDelay {
+            get => _lipSyncDelay;
+            set {
+                if (value == _lipSyncDelay) return;
+                _lipSyncDelay = value;
+                OnPropertyChanged();
+            }
+        }
 
         public void Update(ZektorCommand cmd) {
             if (cmd is SetZone sz && sz.IsQueryResponse) {
@@ -279,6 +288,11 @@ namespace Zektor.Protocol {
                     DigitalRoute = dr;
                 }
             }
+            else if (cmd is LipSyncZoneDelay lsz && lsz.IsQueryResponse) {
+                foreach (var (_, delay) in lsz.Zones.Where(tuple => tuple.Item1.Contains(Index))) {
+                    LipSyncDelay = delay;
+                }
+            }
         }
 
         public void ResetZoneInputs() {
@@ -297,14 +311,24 @@ namespace Zektor.Protocol {
             _volume = null;
             _bass = null;
             _treble = null;
+            _stereoMixdown = null;
+            _digitalRoute = null;
+            ResetEqualizerControls();
+            OnPropertyChanged("audio");
+        }
+
+        public void ResetEqualizerControls() {
             _eqBand1 = null;
             _eqBand2 = null;
             _eqBand3 = null;
             _eqBand4 = null;
             _eqBand5 = null;
-            _stereoMixdown = null;
-            _digitalRoute = null;
-            OnPropertyChanged("audio");
+            OnPropertyChanged("equalizer");
+        }
+
+        public void ResetDelay() {
+            _lipSyncDelay = null;
+            OnPropertyChanged("lipsyncdelay");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -312,5 +336,6 @@ namespace Zektor.Protocol {
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }

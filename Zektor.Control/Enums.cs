@@ -153,17 +153,17 @@ namespace Zektor.Protocol {
     }
 
     public enum VideoInputChannel {
-        Composite1,
-        Composite2,
-        Composite3,
-        Composite4,
-        Composite5,
-        Composite6,
-        Composite7,
-        Composite8,
         Component1,
         Component2,
         Component3,
+        Component4,
+        Component5,
+        Component6,
+        Component7,
+        Component8,
+        Composite1,
+        Composite2,
+        Composite3,
         Next, // next channel in sequence
         Prev, // prev channel in sequence
         None,
