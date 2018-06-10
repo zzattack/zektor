@@ -25,35 +25,35 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.dgvVideo = new System.Windows.Forms.DataGridView();
-            this.keyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bsVideoMap = new System.Windows.Forms.BindingSource(this.components);
             this.tables = new System.Windows.Forms.TableLayoutPanel();
             this.pnlZoneMap = new System.Windows.Forms.Panel();
             this.lblZoneNames = new System.Windows.Forms.Label();
             this.dgvZones = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bsZoneMap = new System.Windows.Forms.BindingSource(this.components);
             this.pnlVideoMap = new System.Windows.Forms.Panel();
             this.lblVideoInputs = new System.Windows.Forms.Label();
             this.pnlAudioMap = new System.Windows.Forms.Panel();
             this.lblAudioZones = new System.Windows.Forms.Label();
             this.dgvAudio = new System.Windows.Forms.DataGridView();
+            this.btnDone = new System.Windows.Forms.Button();
+            this.btnRestoreDefaults = new System.Windows.Forms.Button();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bsZoneMap = new System.Windows.Forms.BindingSource(this.components);
+            this.keyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bsVideoMap = new System.Windows.Forms.BindingSource(this.components);
             this.keyDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bsAudioMap = new System.Windows.Forms.BindingSource(this.components);
-            this.btnDone = new System.Windows.Forms.Button();
-            this.btnRestoreDefaults = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVideo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsVideoMap)).BeginInit();
             this.tables.SuspendLayout();
             this.pnlZoneMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvZones)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsZoneMap)).BeginInit();
             this.pnlVideoMap.SuspendLayout();
             this.pnlAudioMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsZoneMap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsVideoMap)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsAudioMap)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,24 +74,6 @@
             this.dgvVideo.Name = "dgvVideo";
             this.dgvVideo.Size = new System.Drawing.Size(272, 317);
             this.dgvVideo.TabIndex = 1;
-            // 
-            // keyDataGridViewTextBoxColumn
-            // 
-            this.keyDataGridViewTextBoxColumn.DataPropertyName = "Key";
-            this.keyDataGridViewTextBoxColumn.HeaderText = "Key";
-            this.keyDataGridViewTextBoxColumn.Name = "keyDataGridViewTextBoxColumn";
-            this.keyDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            // 
-            // bsVideoMap
-            // 
-            this.bsVideoMap.DataSource = typeof(Zektor.VideoInputMapEntry);
             // 
             // tables
             // 
@@ -152,24 +134,6 @@
             this.dgvZones.Size = new System.Drawing.Size(272, 317);
             this.dgvZones.TabIndex = 1;
             // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "Key";
-            this.dataGridViewTextBoxColumn3.HeaderText = "Key";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "Name";
-            this.dataGridViewTextBoxColumn4.HeaderText = "Name";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            // 
-            // bsZoneMap
-            // 
-            this.bsZoneMap.DataSource = typeof(Zektor.ZoneMapEntry);
-            // 
             // pnlVideoMap
             // 
             this.pnlVideoMap.Controls.Add(this.lblVideoInputs);
@@ -228,6 +192,65 @@
             this.dgvAudio.Size = new System.Drawing.Size(272, 317);
             this.dgvAudio.TabIndex = 1;
             // 
+            // btnDone
+            // 
+            this.btnDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDone.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnDone.Location = new System.Drawing.Point(785, 375);
+            this.btnDone.Name = "btnDone";
+            this.btnDone.Size = new System.Drawing.Size(76, 26);
+            this.btnDone.TabIndex = 2;
+            this.btnDone.Text = "Done";
+            this.btnDone.UseVisualStyleBackColor = true;
+            this.btnDone.Click += new System.EventHandler(this.btnDone_Click);
+            // 
+            // btnRestoreDefaults
+            // 
+            this.btnRestoreDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRestoreDefaults.Location = new System.Drawing.Point(18, 375);
+            this.btnRestoreDefaults.Name = "btnRestoreDefaults";
+            this.btnRestoreDefaults.Size = new System.Drawing.Size(116, 26);
+            this.btnRestoreDefaults.TabIndex = 1;
+            this.btnRestoreDefaults.Text = "Restore defaults";
+            this.btnRestoreDefaults.UseVisualStyleBackColor = true;
+            this.btnRestoreDefaults.Click += new System.EventHandler(this.btnRestoreDefaults_Click);
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "Key";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Key";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn4.DataPropertyName = "Name";
+            this.dataGridViewTextBoxColumn4.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            // 
+            // bsZoneMap
+            // 
+            this.bsZoneMap.DataSource = typeof(Zektor.ZoneMapEntry);
+            // 
+            // keyDataGridViewTextBoxColumn
+            // 
+            this.keyDataGridViewTextBoxColumn.DataPropertyName = "Key";
+            this.keyDataGridViewTextBoxColumn.HeaderText = "Key";
+            this.keyDataGridViewTextBoxColumn.Name = "keyDataGridViewTextBoxColumn";
+            this.keyDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            // 
+            // bsVideoMap
+            // 
+            this.bsVideoMap.DataSource = typeof(Zektor.VideoInputMapEntry);
+            // 
             // keyDataGridViewTextBoxColumn1
             // 
             this.keyDataGridViewTextBoxColumn1.DataPropertyName = "Key";
@@ -246,30 +269,9 @@
             // 
             this.bsAudioMap.DataSource = typeof(Zektor.AudioInputMapEntry);
             // 
-            // btnDone
-            // 
-            this.btnDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDone.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnDone.Location = new System.Drawing.Point(785, 375);
-            this.btnDone.Name = "btnDone";
-            this.btnDone.Size = new System.Drawing.Size(76, 26);
-            this.btnDone.TabIndex = 2;
-            this.btnDone.Text = "Done";
-            this.btnDone.UseVisualStyleBackColor = true;
-            // 
-            // btnRestoreDefaults
-            // 
-            this.btnRestoreDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRestoreDefaults.Location = new System.Drawing.Point(18, 375);
-            this.btnRestoreDefaults.Name = "btnRestoreDefaults";
-            this.btnRestoreDefaults.Size = new System.Drawing.Size(116, 26);
-            this.btnRestoreDefaults.TabIndex = 1;
-            this.btnRestoreDefaults.Text = "Restore defaults";
-            this.btnRestoreDefaults.UseVisualStyleBackColor = true;
-            this.btnRestoreDefaults.Click += new System.EventHandler(this.btnRestoreDefaults_Click);
-            // 
             // NameMappingForm
             // 
+            this.AcceptButton = this.btnDone;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(879, 413);
@@ -280,17 +282,17 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Zone/input naming";
             ((System.ComponentModel.ISupportInitialize)(this.dgvVideo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsVideoMap)).EndInit();
             this.tables.ResumeLayout(false);
             this.pnlZoneMap.ResumeLayout(false);
             this.pnlZoneMap.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvZones)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsZoneMap)).EndInit();
             this.pnlVideoMap.ResumeLayout(false);
             this.pnlVideoMap.PerformLayout();
             this.pnlAudioMap.ResumeLayout(false);
             this.pnlAudioMap.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAudio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsZoneMap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsVideoMap)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsAudioMap)).EndInit();
             this.ResumeLayout(false);
 
