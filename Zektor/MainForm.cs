@@ -363,7 +363,7 @@ namespace Zektor {
             });
         }
         private void tsmiCustomZoneNames_Click(object sender, EventArgs e) {
-            (new NameMappingForm()).ShowDialog(this);
+            (new NameMappingForm()).Show();
         }
 
         private void tsmiReadFullConfig_Click(object sender, EventArgs e) {
