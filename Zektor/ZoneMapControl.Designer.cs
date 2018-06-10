@@ -71,7 +71,6 @@
             this.ckbBreakaway.AutoSize = true;
             this.ckbBreakaway.Checked = true;
             this.ckbBreakaway.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.ckbBreakaway.Enabled = false;
             this.ckbBreakaway.Location = new System.Drawing.Point(181, 31);
             this.ckbBreakaway.Name = "ckbBreakaway";
             this.ckbBreakaway.Size = new System.Drawing.Size(100, 17);

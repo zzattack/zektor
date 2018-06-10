@@ -44,6 +44,8 @@ namespace Zektor {
                 return;
             }
 
+            _updating = true;
+
             // show/hide digital audio stuff depending on XS.AUT bit
             if (_ds.XS.HasValue) {
                 lblUnknownAudioMode.Visible = false;
@@ -117,6 +119,9 @@ namespace Zektor {
                 nudDigitalAudioDelay.Text = "";
                 nudDigitalAudioDelay.Refresh();
             }
+
+            UpdateBreakaway();
+            _updating = false;
         }
 
         private void SetBogusValue(NumericUpDown numericUpDown) {
@@ -176,8 +181,24 @@ namespace Zektor {
             RequestLineTransmit?.Invoke(this, e);
         }
 
+        private bool _updating = false;
         private void combobox_SelectedIndexChanged(object sender, EventArgs e) {
-            // all 3 indices equal --> definitely no breakaway
+            if (_updating) return; // prevent recursion
+            _updating = true;
+
+            // if currently breakaway isn't active, it's likely all 3 want to
+            // be kept in sync
+            var cbSender = sender as ComboBox;
+            if (!ckbBreakaway.Checked) {
+                if (cbVideoInput != cbSender) cbVideoInput.SelectedIndex = cbSender.SelectedIndex;
+                if (cbAnalogAudioInput != cbSender) cbAnalogAudioInput.SelectedIndex = cbSender.SelectedIndex;
+                if (cbDigitalAudioInput != cbSender) cbDigitalAudioInput.SelectedIndex = cbSender.SelectedIndex;
+            }
+
+            _updating = false;
+        }
+
+        private void UpdateBreakaway() { // all 3 indices equal --> definitely no breakaway
             if (cbVideoInput.SelectedIndex == cbAnalogAudioInput.SelectedIndex
                 && cbAnalogAudioInput.SelectedIndex == cbDigitalAudioInput.SelectedIndex) {
                 ckbBreakaway.Checked = false;
@@ -201,7 +222,6 @@ namespace Zektor {
                 else
                     ckbBreakaway.Checked = false;
             }
-
         }
     }
 
