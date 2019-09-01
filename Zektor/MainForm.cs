@@ -12,6 +12,8 @@ using Zektor.Protocol.Audio;
 using Zektor.Shared.DataSources;
 using Zektor.Shared.Utility;
 using PowerState = Zektor.Protocol.PowerState;
+using Zektor.Shared.Protocol;
+using System.Threading.Tasks;
 
 namespace Zektor {
     public partial class MainForm : Form {
@@ -30,7 +32,7 @@ namespace Zektor {
             _logger.ForceASCII = true;
 
             // hook events
-            _proto.LineReceived += (sender, args) => _deviceState.Update(args.Line);
+            _proto.LineReceived += LineReceivedHandler;
             _proto.DeviceState = _deviceState;
             _deviceState.PropertyChanged += OnDeviceStateChanged;
             _deviceState.KeyStateChanged += OnDeviceKeyStateChanged;
@@ -91,6 +93,9 @@ namespace Zektor {
         }
 
         #region UI/state synching
+        private void LineReceivedHandler(object sender, LineTransmitEventArgs<ZektorCommand> e) {
+            _deviceState.Update(e.Line);
+        }
 
         private void OnDeviceStateChanged(object sender, PropertyChangedEventArgs e) {
             if (InvokeRequired) {
@@ -377,52 +382,94 @@ namespace Zektor {
             (new AboutBox()).ShowDialog(this);
         }
 
-        private void ReadAllConfigSettings() {
+        private async void ReadAllConfigSettings() {
             var allZones = new HashSet<int>(new Range(1, 8).Flatten());
             var allInputs = new HashSet<int>(new Range(1, 8).Flatten());
 
-            var commands = new ZektorCommand[] {
+            var synchCommands = new ZektorCommand[] { 
                 // knowing capabilities and extended settings first is useful
                 new QueryCapabilityInfo {IsQueryRequest = true},
                 new ControlSettings { IsQueryRequest = true },
-                // next we can query whatever else we want to know
-                new PowerControl { IsQueryRequest = true },
-                new SetZone { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new MuteZone { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new DelaySwitchZones { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new MasterVolume { IsQueryRequest = true, },
-                new ZoneVolumeAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new BassLevelAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new TrebleLevelAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new Eq1z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new Eq2z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new Eq3z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new Eq4z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new Eq5z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new MixDownStereo { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new DigitalRoute { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new LipSyncZoneDelay { IsQueryRequest = true, Zones =  { (allZones, null) }, },
-                new LipSyncInputDelay { IsQueryRequest = true, Inputs =  { (allInputs, null) }, },
-                new FirmwareInfo { IsQueryRequest = true },
-                new RecentError { },
-                new TransmitEnable { IsQueryRequest = true },
-                new LedIntensities { IsQueryRequest = true },
-                new IpAddressInfo { IsQueryRequest = true },
             };
 
+            foreach (var cmd in synchCommands) {
+                var resp = _proto.ExchangeLine(cmd, TimeSpan.FromMilliseconds(1000));
+            }
+            // the above has triggered creation of controls for all zones
+
+            var cmdResponses = new List<ZektorCommand>();
+            EventHandler<LineTransmitEventArgs<ZektorCommand>> lineReceivedHandler = (sender, args) => {
+                lock (cmdResponses) {
+                    cmdResponses.Add(args.Line);
+                }
+            };
+
+            fctbLog.ShowScrollBars = false;
             var progressDialog = new ProgressDialog();
             progressDialog.Show(this);
-            int idx = 0;
-            foreach (var cmd in commands) {
-                fctbLog.BeginUpdate();
-                _proto.Write(cmd);
-                progressDialog.Progress = (int)(100.0 * idx / commands.Length);
-                // little dirty but gives a much better feel of progress
-                Application.DoEvents();
-                idx++;
-            }
+            Application.DoEvents();
 
+            await Task.Run(() => {
+                // detach handler which would cause results handled using BeginInvoke
+                _proto.LineReceived -= LineReceivedHandler;
+                _proto.LineReceived += lineReceivedHandler;
+
+                var commands = new ZektorCommand[] {
+					// next we can query whatever else we want to know
+					new PowerControl { IsQueryRequest = true },
+                    new SetZone { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new MuteZone { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new DelaySwitchZones { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new MasterVolume { IsQueryRequest = true, },
+                    new ZoneVolumeAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new BassLevelAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new TrebleLevelAdjust { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new Eq1z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new Eq2z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new Eq3z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new Eq4z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new Eq5z { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new MixDownStereo { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new DigitalRoute { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new LipSyncZoneDelay { IsQueryRequest = true, Zones =  { (allZones, null) }, },
+                    new LipSyncInputDelay { IsQueryRequest = true, Inputs =  { (allInputs, null) }, },
+                    new FirmwareInfo { IsQueryRequest = true },
+                    new RecentError { },
+                    new TransmitEnable { IsQueryRequest = true },
+                    new LedIntensities { IsQueryRequest = true },
+                    new IpAddressInfo { IsQueryRequest = true },
+                };
+
+                int idx = 0;
+                foreach (var cmd in commands) {
+                    _proto.Write(cmd);
+                    idx++;
+
+                    BeginInvoke((Action)delegate {
+                        progressDialog.Progress = (int)(100.0 * idx / commands.Length);
+                        progressDialog.Update();
+                        Application.DoEvents();
+                    });
+                }
+            });
+
+            // exchange local handler for invoking one
+            _proto.LineReceived -= lineReceivedHandler;
+            _proto.LineReceived += LineReceivedHandler;
             progressDialog.Close();
+
+            fctbLog.ShowScrollBars = true;
+
+            // handle everything that came in batched
+            lock (cmdResponses) {
+                foreach (var zCmdBatch in cmdResponses.Split(10)) {
+                    foreach (var zCmd in zCmdBatch) {
+                        _deviceState.Update(zCmd);
+                        Application.DoEvents();
+                    }
+                }
+                cmdResponses.Clear();
+            }
         }
 
         private void btnShowLogger_Click(object sender, EventArgs e) {

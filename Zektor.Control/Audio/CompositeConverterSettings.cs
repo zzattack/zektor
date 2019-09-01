@@ -5,7 +5,7 @@ namespace Zektor.Protocol.Audio {
         protected override string Command => "CCV";
 
         public int ConverterIdx { get; set; }
-        public VideoInputChannel VideoInput { get; set; }
+        public int VideoInput { get; set; }
         public int Contrast { get; set; }
         public int Brightness { get; set; }
         public int Saturation { get; set; }
@@ -30,7 +30,7 @@ namespace Zektor.Protocol.Audio {
             string[] parts = cmd.Split(',');
             if (parts.Length != 6) return false;
             ConverterIdx = int.Parse(parts[0]);
-            VideoInput = (VideoInputChannel)int.Parse(parts[1]);
+            VideoInput = int.Parse(parts[1]);
             Contrast = int.Parse(parts[2]);
             Brightness = int.Parse(parts[3]);
             Saturation = int.Parse(parts[4]);

@@ -37,14 +37,18 @@ namespace Zektor {
                 UpdateUI();
         }
 
-        private void UpdateUI() {
+        internal void UpdateUI() {
             if (!IsHandleCreated || IsDisposed) return;
             if (InvokeRequired) {
-                BeginInvoke((Action)UpdateUI);
+                if (!_updateScheduled) {
+                    BeginInvoke((Action)UpdateUI);
+                    _updateScheduled = true;
+                }
                 return;
             }
 
             _updating = true;
+            _updateScheduled = false;
 
             // show/hide digital audio stuff depending on XS.AUT bit
             if (_ds.XS.HasValue) {
@@ -91,7 +95,7 @@ namespace Zektor {
             ckbMuteVideo.CheckState = CheckStateFrom(_zs.VideoMute);
             ckbMuteAnalogAudio.CheckState = CheckStateFrom(_zs.AnalogAudioMute);
             ckbMuteDigitalAudio.CheckState = CheckStateFrom(_zs.DigitalAudioMute);
-            
+
             // update num up/downs
             if (_zs.VideoDelay.HasValue) {
                 SetBogusValue(nudVideoDelay); // so text is re-written
@@ -182,6 +186,7 @@ namespace Zektor {
         }
 
         private bool _updating = false;
+        bool _updateScheduled = false;
         private void combobox_SelectedIndexChanged(object sender, EventArgs e) {
             if (_updating) return; // prevent recursion
             _updating = true;
@@ -190,9 +195,14 @@ namespace Zektor {
             // be kept in sync
             var cbSender = sender as ComboBox;
             if (!ckbBreakaway.Checked) {
-                if (cbVideoInput != cbSender) cbVideoInput.SelectedIndex = cbSender.SelectedIndex;
-                if (cbAnalogAudioInput != cbSender) cbAnalogAudioInput.SelectedIndex = cbSender.SelectedIndex;
-                if (cbDigitalAudioInput != cbSender) cbDigitalAudioInput.SelectedIndex = cbSender.SelectedIndex;
+                if (cbVideoInput != cbSender && cbSender.SelectedIndex < cbVideoInput.Items.Count)
+                    cbVideoInput.SelectedIndex = cbSender.SelectedIndex;
+
+                if (cbAnalogAudioInput != cbSender && cbSender.SelectedIndex < cbAnalogAudioInput.Items.Count)
+                    cbAnalogAudioInput.SelectedIndex = cbSender.SelectedIndex;
+
+                if (cbDigitalAudioInput != cbSender && cbSender.SelectedIndex < cbDigitalAudioInput.Items.Count)
+                    cbDigitalAudioInput.SelectedIndex = cbSender.SelectedIndex;
             }
 
             _updating = false;
